@@ -1,15 +1,35 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import HelloWorld from '@/components/HelloWorld';
+// 路由组件
+import * as views from '@/views';
+// 路由模块
+import appointment from './appointment';
+import center from './center';
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
+
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      redirect: '/center',
     },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: views.Signup,
+    },
+
+    {
+      path: '/child-binding',
+      name: 'ChildBinding',
+      component: views.ChildBinding,
+    },
+
+    ...appointment,
+
+    center,
   ],
 });
