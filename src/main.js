@@ -1,3 +1,6 @@
+// 全局样式
+import '@/styles/global.less';
+
 import Vue from 'vue';
 import FastClick from 'fastclick';
 import router from '@/router';
