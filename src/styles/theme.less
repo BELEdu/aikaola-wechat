@@ -1,11 +1,23 @@
+/**
+ * 覆盖vux的自带主题
+ */
+
+@import './vars.less';
 @namespace 'vux';
+
+/**
+ * theme
+ */
+@theme-color: @primary-color;
 
 /**
  * button
  */
-@button-primary-bg-color: #33a3f4;
+@button-primary-bg-color: @primary-color;
+@button-primary-active-bg-color: darken(@primary-color, 10%);
+@button-primary-disabled-bg-color: lighten(@primary-color, 20%);
 
 /**
  * tabbar
  */
-@tabbar-text-active-color: #33a3f4;
+@tabbar-text-active-color: @primary-color;

@@ -1,0 +1,44 @@
+/**
+ * 浮动
+ */
+.left {
+  float: left !important;
+}
+
+.right {
+  float: right !important;
+}
+
+/**
+ * 文本对齐
+ */
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+/**
+ * 清除浮动
+ */
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/**
+ * 超出部分省略号
+ */
+.ellipsis {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
