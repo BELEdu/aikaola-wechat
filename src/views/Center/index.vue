@@ -1,5 +1,5 @@
 <template>
-  <ViewBox class="center">
+  <div class="center">
     <router-view></router-view>
 
     <Tabbar>
@@ -14,7 +14,7 @@
         <span></span>
       </TabbarItem>
     </Tabbar>
-  </ViewBox>
+  </div>
 </template>
 
 <script>
@@ -51,6 +51,7 @@ export default {
 
 <style lang="less">
 .center {
+  height: 100%;
 
   .weui-tabbar__icon .iconfont::before {
     font-size: 20px;

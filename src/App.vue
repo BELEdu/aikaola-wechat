@@ -1,12 +1,18 @@
 <template>
-  <div id="app">
+  <ViewBox id="app">
     <router-view></router-view>
-  </div>
+  </ViewBox>
 </template>
 
 <script>
+import { ViewBox } from 'vux';
+
 export default {
   name: 'app',
+
+  components: {
+    ViewBox,
+  },
 };
 </script>
 
