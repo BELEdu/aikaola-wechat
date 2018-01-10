@@ -1,3 +1,6 @@
+// vux组件引入
+import { ToastPlugin } from 'vux';
+
 // 全局样式
 import '@/styles/global.less';
 
@@ -11,7 +14,8 @@ FastClick.attach(document.body);
 
 Vue.config.productionTip = false;
 
-Vue.use(plugins);
+Vue.use(plugins)
+  .use(ToastPlugin);
 
 /* eslint-disable no-new */
 new Vue({
