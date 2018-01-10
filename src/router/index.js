@@ -6,9 +6,11 @@ import * as views from '@/views';
 import appointment from './appointment';
 import center from './center';
 
+const COMPANY = '爱考拉家校互通';
+
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
 
   routes: [
@@ -20,12 +22,18 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: views.Signup,
+      meta: {
+        title: '登录',
+      },
     },
 
     {
       path: '/child-binding',
       name: 'ChildBinding',
       component: views.ChildBinding,
+      meta: {
+        title: '绑定学员',
+      },
     },
 
     ...appointment,
@@ -33,3 +41,14 @@ export default new Router({
     center,
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title;
+  } else {
+    document.title = COMPANY;
+  }
+  next();
+});
+
+export default router;
