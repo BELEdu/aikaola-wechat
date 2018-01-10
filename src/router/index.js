@@ -23,7 +23,7 @@ const router = new Router({
       name: 'Signup',
       component: views.Signup,
       meta: {
-        title: '登录',
+        title: '绑定登录',
       },
     },
 
