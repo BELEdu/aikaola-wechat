@@ -1,3 +1,18 @@
 @import '~vux/src/styles/reset.less';
 @import './vars.less';
 @import './utils.less';
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #fbf9fe;
+  color: @text-color-default;
+}
+
+input::placeholder {
+  color: @text-color-subsidiary;
+}

@@ -17,17 +17,6 @@ export default {
 </script>
 
 <style lang="less">
-
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  background-color: #fbf9fe;
-}
-
 #app {
   height: 100%;
   width: 100%;
