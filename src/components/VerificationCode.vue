@@ -5,6 +5,7 @@
     @input="code => $emit('input', code)"
     title="验证码"
     placeholder="请输入验证码"
+    :label-width="labelWidth"
   >
     <XButton
       class="verification-code__fetch"
@@ -69,6 +70,9 @@ export default {
       type: String,
       required: true,
     },
+
+    // 独立设置标签宽度
+    labelWidth: String,
   },
 
   data: () => ({
