@@ -11,37 +11,15 @@
         placeholder="请输入姓名"
       />
       <XInput
-        ref="telphone"
         v-model="data.telphone"
         title="手机"
         placeholder="请输入手机号"
       />
-      <XInput
-        ref="code"
+      <VerificationCode
         v-model="data.code"
-        title="验证码"
-        placeholder="请输入验证码"
-      >
-        <XButton
-          class="signup__codebtn"
-          slot="right"
-          type="primary"
-          :show-loading="codebtnLoading"
-          :disabled="showCounter"
-          @click.native="v_requestCode"
-          mini
-        >
-          <span v-show="showCounter && !codebtnLoading">
-            <Countdown
-              v-model="counter"
-              @on-finish="vm_countOver"
-            />s
-          </span>
-          <span v-show="!showCounter && !codebtnLoading">
-            获取验证码
-          </span>
-        </XButton>
-      </XInput>
+        :telphone="data.telphone"
+        url="www"
+      />
     </Group>
     <XButton
       class="signup__confirm"
@@ -58,9 +36,15 @@
  * @desc 个人信息注册
  * @author hjz
  */
+import {
+  formUtils,
+} from '@/mixins';
 
 import {
-  Countdown,
+  VerificationCode,
+} from '@/components';
+
+import {
   Group,
   XButton,
   XInput,
@@ -70,11 +54,15 @@ export default {
   name: 'Signup',
 
   components: {
-    Countdown,
     Group,
+    VerificationCode,
     XButton,
     XInput,
   },
+
+  mixins: [
+    formUtils,
+  ],
 
   data: () => ({
     data: {
@@ -90,12 +78,6 @@ export default {
     },
 
     submitLoading: false,
-
-    codebtnLoading: false,
-
-    showCounter: false,
-
-    counter: 10,
   }),
 
   methods: {
@@ -103,43 +85,6 @@ export default {
       const valid = this.validateForm(this.data, this.rules);
 
       if (valid) this.submit();
-    },
-
-    validateForm(data, rules) {
-      const result = Object.keys(data)
-        .every(key => this.checkProp(data[key], rules[key]));
-
-      return result;
-    },
-
-    validateProp(value, msg) {
-      if (!value) this.$vux.toast.text(msg);
-
-      return !!value;
-    },
-
-    v_requestCode() {
-      const valid = this.validateProp(
-        this.data.telphone,
-        this.rules.telphone,
-      );
-
-      if (valid) this.m_requestCode();
-    },
-
-    m_requestCode() {
-      this.codebtnLoading = true;
-
-      setTimeout(() => {
-        this.codebtnLoading = false;
-      }, 1000);
-
-      this.showCounter = true;
-    },
-
-    vm_countOver() {
-      this.showCounter = false;
-      this.counter = 10;
     },
 
     submit() {
@@ -159,11 +104,6 @@ export default {
 
   input::placeholder {
 
-  }
-
-  .signup__codebtn {
-    box-sizing: content-box;
-    min-width: 5em;
   }
 }
 </style>
