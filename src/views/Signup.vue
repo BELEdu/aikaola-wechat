@@ -5,12 +5,17 @@
       gutter="15px"
     >
       <XInput
+        ref="name"
+        v-model="data.name"
+        title="姓名"
+        placeholder="请输入姓名"
+      />
+      <XInput
         ref="telphone"
         v-model="data.telphone"
-        title="+86"
-        is-type="china-mobile"
-        placeholder="请输入手机号码"
-      ></XInput>
+        title="手机"
+        placeholder="请输入手机号"
+      />
       <XInput
         ref="code"
         v-model="data.code"
@@ -73,11 +78,13 @@ export default {
 
   data: () => ({
     data: {
+      name: '',
       telphone: '',
       code: '',
     },
 
     rules: {
+      name: '请填写姓名',
       telphone: '请填写手机号码',
       code: '请输入验证码',
     },
@@ -105,14 +112,14 @@ export default {
       return result;
     },
 
-    checkProp(value, msg) {
+    validateProp(value, msg) {
       if (!value) this.$vux.toast.text(msg);
 
       return !!value;
     },
 
     v_requestCode() {
-      const valid = this.checkProp(
+      const valid = this.validateProp(
         this.data.telphone,
         this.rules.telphone,
       );
