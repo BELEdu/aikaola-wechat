@@ -89,7 +89,7 @@ export default {
     },
 
     submit() {
-      this.$router.push('/center');
+      this.$router.replace('/center');
     },
   },
 };

@@ -88,7 +88,7 @@ export default {
     },
 
     submit() {
-      this.$router.push('/child-binding');
+      this.$router.replace('/child-binding');
     },
   },
 };
