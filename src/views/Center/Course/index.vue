@@ -1,16 +1,16 @@
 <template>
   <div>
-    <span>课程表 - 课程安排</span>
+    <span>课程表</span>
   </div>
 </template>
 
 <script>
 /**
- * @desc 课程表 - 课程安排
+ * @desc 课程表
  */
 
 export default {
-  name: 'CourseSchedule',
+  name: 'Course',
 };
 </script>
 

@@ -33,30 +33,31 @@ export default {
     /* 课程管理 */
 
     {
-      path: 'course-schedule',
-      name: 'CourseSchedule',
-      component: views.CourseSchedule,
+      path: '/center/course',
+      name: 'CenterCourse',
+      component: views.CenterCourse,
       meta: {
         title: '课程表',
       },
     },
 
     {
-      path: 'course-info/:childId/:couresId',
-      name: 'CourseInfo',
-      component: views.CourseInfo,
+      path: '/center/course/:childId/:couresId',
+      name: 'CenterCourseDetail',
+      component: views.CenterCourseDetail,
       meta: {
         title: '课程详情',
       },
     },
 
     {
-      path: 'course-homework/:childId/:couresId',
-      name: 'CourseHomework',
-      component: views.CourseHomework,
+      path: '/center/course/:childId/:couresId/homework',
+      name: 'CenterCourseHomework',
+      component: views.CenterCourseHomework,
       meta: {
         title: '上传作业',
       },
     },
+
   ],
 };

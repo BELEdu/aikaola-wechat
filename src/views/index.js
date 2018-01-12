@@ -1,8 +1,8 @@
 export { default as Center } from './Center';
 
-export { default as CourseHomework } from './Center/CourseHomework';
-export { default as CourseInfo } from './Center/CourseInfo';
-export { default as CourseSchedule } from './Center/CourseSchedule';
+export { default as CenterCourse } from './Center/Course';
+export { default as CenterCourseDetail } from './Center/Course/Detail';
+export { default as CenterCourseHomework } from './Center/Course/Homework';
 
 export { default as UserChild } from './Center/UserChild';
 export { default as UserInfo } from './Center/UserInfo';

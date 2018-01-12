@@ -31,6 +31,8 @@
 import { Divider } from 'vux';
 
 export default {
+  name: 'CourseHomework',
+
   components: {
     Divider,
   },
