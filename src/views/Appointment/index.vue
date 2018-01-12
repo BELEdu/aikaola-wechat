@@ -1,5 +1,5 @@
 <template>
-  <div class="appointment">
+  <ViewBox class="appointment">
     <Group label-width="5em">
 
       <!-- 学员姓名 -->
@@ -34,8 +34,16 @@
       </Cell>
 
       <!-- 选择年级弹出菜单 -->
-      <Popup v-model="active.grade" height="50%">
-        <Group gutter="0">
+      <Popup
+        v-model="active.grade"
+      >
+        <PopupHeader
+          title="请选择年级"
+        />
+        <Group
+          gutter="0"
+          class="appointment__poupup"
+        >
           <Checklist
             v-model="form.myGrade"
             :max="1"
@@ -120,8 +128,7 @@
         :link="`${currenRoutetPath}/error`"
       >失败</XButton>
     </div>
-
-  </div>
+  </ViewBox>
 </template>
 
 <script>
@@ -138,6 +145,7 @@ import {
   Popup,
   PopupHeader,
   Datetime,
+  ViewBox,
 } from 'vux';
 
 import { formUtils } from '@/mixins';
@@ -156,6 +164,7 @@ export default {
     Popup,
     PopupHeader,
     Datetime,
+    ViewBox,
   },
 
   data() {
@@ -351,6 +360,11 @@ export default {
 
   &__text {
     color:@text-color-default;
+  }
+
+  &__poupup {
+    height: 250px;
+    overflow-y: scroll;
   }
 
   .weui-cell__ft {
