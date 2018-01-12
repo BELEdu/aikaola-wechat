@@ -1,19 +1,23 @@
 <template>
   <div class="center">
-    <router-view></router-view>
+    <ViewBox>
 
-    <Tabbar>
-      <TabbarItem
-        v-for="item in navigation"
-        :key="item.path"
-        :link="item.link"
-        :selected="$route.path.includes(item.link)"
-      >
-        <span slot="icon" :class="item.icon"></span>
-        <span slot="label">{{item.text}}</span>
-        <span></span>
-      </TabbarItem>
-    </Tabbar>
+      <router-view></router-view>
+
+      <Tabbar slot="bottom">
+        <TabbarItem
+          v-for="item in navigation"
+          :key="item.path"
+          :link="item.link"
+          :selected="$route.path.includes(item.link)"
+        >
+          <span slot="icon" :class="item.icon"></span>
+          <span slot="label">{{item.text}}</span>
+          <span></span>
+        </TabbarItem>
+      </Tabbar>
+
+    </ViewBox>
   </div>
 </template>
 
@@ -36,7 +40,7 @@ export default {
     navigation: [
       {
         icon: 'iconfont icon-course',
-        link: '/center/course-schedule',
+        link: '/center/course',
         text: '课程表',
       },
       {

@@ -1,7 +1,7 @@
 <template>
-  <ViewBox id="app">
+  <div id="app">
     <router-view></router-view>
-  </ViewBox>
+  </div>
 </template>
 
 <script>
