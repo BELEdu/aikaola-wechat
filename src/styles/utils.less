@@ -42,3 +42,22 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.right-arrow {
+  position: relative;
+}
+
+.right-arrow::after {
+  content: " ";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #C8C8CD;
+  border-style: solid;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  margin-top: -4px;
+}
