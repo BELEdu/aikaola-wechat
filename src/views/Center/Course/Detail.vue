@@ -59,8 +59,12 @@
     </div>
 
     <!-- 课件预览弹出菜单 -->
-    <Popup v-model="active">
+    <Popup
+      v-model="active"
+      class="course-detail__popup"
+    >
       <PopupHeader
+        :show-bottom-border="false"
         title="请选择课件"
       />
       <Group gutter="0">
@@ -174,7 +178,7 @@ export default {
     z-index: 99;
     width: 100%;
     padding-bottom: 10px;
-    background-color: @bg-color;
+    background-color: @background-color;
   }
 
   &__body {
@@ -313,6 +317,12 @@ export default {
   &__section {
     padding: 20px 10px;
     background-color: #fff
+  }
+
+  &__popup {
+    .vux-cell-bd  {
+      font-size: 15px;
+    }
   }
 }
 </style>

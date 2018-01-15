@@ -102,7 +102,7 @@ export default {
   }
 
   p {
-    margin-top: 25px;
+    margin: 25px 0;
     font-size: @text-size-title;
     line-height: 1;
   }
