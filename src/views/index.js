@@ -8,8 +8,9 @@ export { default as UserChild } from './Center/UserChild';
 export { default as UserInfo } from './Center/UserInfo';
 
 export { default as Appointment } from './Appointment';
-export { default as AppointmentResult } from './Appointment/Result';
 
 export { default as ChildBinding } from './ChildBinding';
 
 export { default as Signup } from './Signup';
+
+export { default as Result } from './Result';

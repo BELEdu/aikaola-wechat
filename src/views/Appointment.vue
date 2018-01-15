@@ -121,11 +121,11 @@
       >立即预约</XButton>
 
       <XButton
-        :link="`${currenRoutetPath}/success`"
+        @click.native="isResultSuccess(true)"
       >成功</XButton>
 
       <XButton
-        :link="`${currenRoutetPath}/error`"
+        @click.native="isResultSuccess(false)"
       >失败</XButton>
     </div>
   </ViewBox>
@@ -148,12 +148,15 @@ import {
   ViewBox,
 } from 'vux';
 
-import { formUtils } from '@/mixins';
+import { formUtils, resultTool, loadingTool } from '@/mixins';
+
+const MODULE_TEST = '智能测试';
+const MODULE_COURSE = '课程试听';
 
 export default {
   name: 'Appointment',
 
-  mixins: [formUtils],
+  mixins: [formUtils, resultTool, loadingTool],
 
   components: {
     XInput,
@@ -287,14 +290,9 @@ export default {
       return `${cyear}-${cmonth}-${cday}`;
     },
 
-    // 当前路由地址
-    currenRoutetPath() {
-      return this.$route.path;
-    },
-
-    // 预约类型
-    currentType() {
-      return this.$route.parmas.type;
+    // 预约类型是否是"智能测试"
+    isTypeTest() {
+      return this.$route.params.type === 'test';
     },
   },
 
@@ -318,6 +316,7 @@ export default {
 
     // 提交前校验
     beforeSubmit() {
+      // 通用校验mixin
       const validRequired = this.validateForm(this.form, this.rules);
 
       if (validRequired) {
@@ -335,10 +334,22 @@ export default {
       // eslint-disable-next-line
       console.log(data);
     },
+
+    // 表单提交结果后续处理
+    isResultSuccess(RightWrong) {
+      const isSuccess = RightWrong;
+      this.toResultPage({
+        status: isSuccess ? 'success' : 'error',
+        title: isSuccess ? '预约成功' : '预约失败',
+        message: isSuccess ? `${this.isTypeTest ? MODULE_TEST : MODULE_COURSE}预约成功` : '您已预约，请勿重复预约',
+        to: '/appointment/test',
+        time: 3,
+      });
+    },
   },
 
   created() {
-
+    this.hideLoading();
   },
 
   beforeRouteEnter(to, from, next) {

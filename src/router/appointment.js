@@ -10,9 +10,4 @@ export default [
     name: 'TestAppointment',
     component: views.Appointment,
   },
-  {
-    path: '/appointment/:type/:status',
-    name: 'AppointmentResult',
-    component: views.AppointmentResult,
-  },
 ];
