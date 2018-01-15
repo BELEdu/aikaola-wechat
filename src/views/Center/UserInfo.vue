@@ -1,13 +1,8 @@
 <template>
   <div class="user-info">
-    <Panel
-      class="user-info__user"
-      :list="[{
-        src: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
-        title: '包着海苔的饭',
-        desc: '13711112222',
-      }]"
-      type="5"
+    <UserInfoHeader
+      :click="() => $router.push('/center/user-edition')"
+      :data="user"
     />
 
     <div class="user-info__child-title">
@@ -17,35 +12,10 @@
       >+添加小孩</span>
     </div>
 
-    <div
-      v-for="i in 2"
-      class="user-info__child-card"
-      @click="$router.push('/center/user-child/1')"
-    >
-      <div class="user-info__child-card__title">
-        <span>
-          <img src="http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg">
-        </span>
-        <span>王小明</span>
-      </div>
-      <div
-        v-for="i in 2"
-        class="right-arrow user-info__child-card__content"
-      >
-        <div>课程名称：小学五年级奥数基础班</div>
-        <div>剩余课时：3课时</div>
-        <div>
-          <span>剩余评价：</span>
-          <span>
-            <UserInfoChildEvaluation
-              :content="childInfo.rate"
-              :ellipsis="childInfo.date"
-              :sticky="childInfo.date"
-            />
-          </span>
-        </div>
-      </div>
-    </div>
+    <UserInfoChild
+      @click.native="$router.push('/center/user-child/1')"
+      :data="childInfo"
+    />
   </div>
 </template>
 
@@ -56,20 +26,42 @@
  */
 
 import { Panel } from 'vux';
-import UserInfoChildEvaluation from './components/UserInfoChildEvaluation';
+import {
+  UserInfoChild,
+  UserInfoHeader,
+} from './components';
 
 export default {
   name: 'UserInfo',
 
   components: {
     Panel,
-    UserInfoChildEvaluation,
+    UserInfoChild,
+    UserInfoHeader,
   },
 
   data: () => ({
+    user: {
+      avatar: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
+      name: '包着海苔的饭',
+      phone: 13711112222,
+    },
+
     childInfo: {
-      rate: '明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真',
-      date: '2018-01-12',
+      avatar: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
+      name: '王小明',
+      courses: [
+        {
+          rate: '明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真',
+          date: '2018-01-12',
+          time: 3,
+        },
+        {
+          rate: '明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真',
+          date: '2018-01-12',
+          time: 3,
+        },
+      ],
     },
   }),
 };
@@ -78,28 +70,48 @@ export default {
 <style lang="less">
 @gutter: 15px;
 
-.user-info__user {
+.user-info {
+  overflow: auto;
+}
+
+.user-info__header {
+  position: relative;
   padding-top: @gutter;
   margin-bottom: @gutter;
-  background-color: transparent !important;
+}
 
-  .weui-panel__bd {
-    background-color: #fff;
+.user-info__header-content {
+  display: flex;
+  padding: @gutter;
+  background-color: #fff;
+}
+
+.user-info__header-avatar {
+  flex: none;
+  margin-right: 12px;
+  height: 65px;
+  width: 65px;
+  border-radius: 5px;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+    width: 100%;
   }
+}
 
-  .weui-media-box__hd {
-    height: 65px !important;
-    width: 65px !important;
-    border-radius: 5px;
-    overflow: hidden;
-  }
+.user-info__header-desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 
-  .weui-media-box__title {
+  span:first-of-type {
     font-size: @text-size-title;
   }
 
-  .weui-media-box__desc {
+  span:last-of-type {
     font-size: @text-size-content;
+    color: @text-color-subsidiary;
   }
 }
 
@@ -114,55 +126,6 @@ export default {
 
   span:last-of-type {
     color: @text-color-primary;
-  }
-}
-
-.user-info__child-card {
-  margin: @gutter 0;
-  padding-left: @gutter;
-  background-color: #fff;
-}
-
-.user-info__child-card__title {
-  display: flex;
-  align-items: center;
-  padding: 10px 0;
-
-  span:first-of-type {
-    margin-right: 10px;
-    height: 36px;
-    width: 36px;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  span:last-of-type {
-    font-size: @text-size-title;
-  }
-}
-
-.user-info__child-card__content {
-  position: relative;
-  border-top: 1px solid @bd-color-base;
-  padding: @gutter 2.5em @gutter 0;
-  padding-left: 0;
-  font-size: @text-size-content;
-  color: @text-color-secondary;
-
-  >div:last-of-type {
-    display: flex;
-    width: 100%;
-
-    span:first-of-type {
-      flex-shrink: 0;
-    }
-
-    span:last-of-type {
-      flex-grow: 1;
-    }
   }
 }
 </style>
