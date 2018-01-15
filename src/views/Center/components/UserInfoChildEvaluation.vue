@@ -38,7 +38,7 @@ export default {
 
 <style lang="less">
 @line-height: 1.5em;
-@ellipsis-width: 6em;
+@ellipsis-width: 7em;
 
 .user-info-child-evaluation {
   width: 100%;
