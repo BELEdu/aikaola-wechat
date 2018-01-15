@@ -30,6 +30,15 @@ export default {
       },
     },
 
+    {
+      path: 'user-edition',
+      name: 'UserEdition',
+      component: views.UserEdition,
+      meta: {
+        title: '修改资料',
+      },
+    },
+
     /* 课程管理 */
 
     {
