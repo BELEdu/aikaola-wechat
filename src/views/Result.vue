@@ -1,18 +1,11 @@
 <template>
   <div class="appointment-result">
 
-    <img
-      v-if="query.status === 'error'"
-      :src="require('@/assets/appointment-error.png')"
-      alt="失败图标"
-    >
-    <img
-      v-else
-      :src="require('@/assets/appointment-success.png')"
-      alt="成功图标"
-    >
-
-    <p>{{query.message || '暂无提示信息'}}</p>
+    <!-- 缺省展示组件 -->
+    <DefaultContent
+      :is-success="isSuccess"
+      :text="query.message || '暂无提示信息'"
+    ></DefaultContent>
 
   </div>
 </template>
@@ -22,20 +15,29 @@
  * @desc 通用结果展示页面
  */
 
+import { DefaultContent } from '@/components';
+
 export default {
   name: 'Result',
+
+  components: {
+    DefaultContent,
+  },
 
   data() {
     return {
       timer: null, // 定时器
-
-      time: null,
     };
   },
 
   computed: {
     query() {
       return this.$route.query;
+    },
+
+    // 是否显示成功图标
+    isSuccess() {
+      return this.query.status !== 'error';
     },
   },
 
@@ -54,7 +56,7 @@ export default {
     startTimer() {
       const path = this.query.to;
       const totalTime = +this.query.time || 4; // 默认倒计时4s
-      let nowTime = totalTime;
+      let nowTime = totalTime; // 当前秒数
 
       // 如果query有跳转路由的参数，则开启定时器
       if (path) {
@@ -87,24 +89,8 @@ export default {
 
 <style lang="less">
 
-@icon-height:150px;
-
 .appointment-result {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  img {
-    height: @icon-height;
-    width: @icon-height;
-  }
-
-  p {
-    margin: 25px 0;
-    font-size: @text-size-title;
-    line-height: 1;
-  }
+  width: 100%;
 }
 </style>
