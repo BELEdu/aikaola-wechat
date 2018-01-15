@@ -20,5 +20,12 @@ export default {
 #app {
   height: 100%;
   width: 100%;
+
+  &::before {
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+  }
 }
 </style>
