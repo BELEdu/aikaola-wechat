@@ -1,7 +1,7 @@
 <template>
   <div class="default-content">
     <!-- 图标 -->
-    <img :src="iconSrc">
+    <svg><use :xlink:href="`#${svgId}`" /></svg>
     <!-- 提示文案 -->
     <p v-if="text">{{text}}</p>
   </div>
@@ -15,9 +15,6 @@
  * @param {Boolean} isSuccess - 是否使用成功的图标，默认展示失败的图标
  * @param {String} text - 提示文案
  */
-
-import errorIcon from '@/assets/appointment-error.png';
-import successIcon from '@/assets/appointment-success.png';
 
 export default {
   name: 'DefaultContent',
@@ -34,8 +31,8 @@ export default {
   },
 
   computed: {
-    iconSrc() {
-      return this.isSuccess ? successIcon : errorIcon;
+    svgId() {
+      return this.isSuccess ? 'default-success' : 'default-error';
     },
   },
 
@@ -54,7 +51,7 @@ export default {
   align-items: center;
   flex-direction: column;
 
-  img {
+  svg {
     height: @icon-height;
     width: @icon-height;
   }

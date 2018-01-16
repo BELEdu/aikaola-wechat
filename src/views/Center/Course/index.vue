@@ -1,6 +1,7 @@
 <template>
   <div>
     <span>课程表</span>
+
   </div>
 </template>
 
