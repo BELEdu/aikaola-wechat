@@ -1,8 +1,8 @@
 <template>
   <div class="user-child">
     <ThePanel
-      v-slide:left="() => slideCourses(1)"
-      v-slide:right="() => slideCourses(-1)"
+      v-slide:left="() => slideCourse(1)"
+      v-slide:right="() => slideCourse(-1)"
       :avatar="data.avatar"
       :name="data.name"
     >
@@ -97,8 +97,14 @@ export default {
   },
 
   methods: {
-    slideCourses(step) {
-      this.courseIndex = (this.courseIndex + step) % this.data.courses.length;
+    slideCourse(step) {
+      const len = this.data.courses.length;
+
+      const index = this.courseIndex + step;
+
+      const valid = index >= 0 && index < len;
+
+      if (valid) this.courseIndex = index;
     },
   },
 };
