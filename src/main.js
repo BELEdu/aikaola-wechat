@@ -12,6 +12,11 @@ import App from './App';
 
 FastClick.attach(document.body);
 
+// 引入svg文件
+const requireAll = requireContext => requireContext.keys().map(requireContext);
+const req = require.context('./assets/svg', true, /\.svg$/);
+requireAll(req);
+
 Vue.config.productionTip = false;
 
 Vue.use(plugins)

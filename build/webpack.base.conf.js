@@ -51,6 +51,7 @@ let webpackConfig = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        exclude: [resolve('src/assets/svg')], // 不处理assets/svg下的svg
         loader: 'url-loader',
         options: {
           limit: 10000,
@@ -72,6 +73,14 @@ let webpackConfig = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      /**
+       * svg-loader
+       */
+      {
+        test: /\.svg$/,
+        include: [resolve('src/assets/svg')],
+        loader: 'svg-sprite-loader',
       }
     ]
   }
