@@ -1,62 +1,63 @@
 <template>
   <div class="course-detail">
 
-    <!-- 头部 -->
-    <div class="course-detail__header">
+    <!-- 课程和教师信息 -->
+    <div class="course-detail__meta">
+      <Divider>
+        <b>数学速算与巧算</b>
+        <div class="course-detail__meta__small">教师：肖冰洁</div>
+      </Divider>
+    </div>
 
-      <!-- 课程和教师信息 -->
-      <div class="course-detail__meta">
-        <Divider>
-          <b>数学速算与巧算</b>
-          <div class="course-detail__meta__small">教师：肖冰洁</div>
-        </Divider>
-      </div>
+    <div class="course-detail__action">
+      <!-- 上传作业 -->
+      <a
+        :class="{'course-detail__action__disabled':!uploadActive}"
+        @click="goToUpload"
+      >
+        <div class="course-detail__action__svg">
+          <svg><use :xlink:href="uploadSvgId" /></svg>
+        </div>
+        <span>上传作业</span>
+      </a>
 
-      <div class="course-detail__action">
-        <!-- 上传作业 -->
-        <router-link :to="`${currenRoutetPath}/homework`">
-          <i class="iconfont icon-upload"></i>
-          <span>上传作业</span>
-        </router-link>
+      <!-- ppt课件预览 -->
+      <a
+        :class="{'course-detail__action__disabled':!pptActive}"
+        @click="pptPopup"
+      >
+        <div class="course-detail__action__svg">
+          <svg><use :xlink:href="pptSvgId" /></svg>
+        </div>
+        <span>课件预览</span>
+      </a>
+    </div>
 
-        <!-- 课件预览 -->
-        <a @click="pptPopup">
-          <i class="iconfont icon-ppt-active"></i>
-          <span>课件预览</span>
-        </a>
+    <!-- 教学评价 -->
+    <div class="course-detail__comment">
+      <div class="course-detail__comment__wrap">
+        <h5>评价内容</h5>
+        <svg class="course-detail__comment__svg-left">
+          <use xlink:href="#quotation-mark-left" />
+        </svg>
+        <svg class="course-detail__comment__svg-right">
+          <use xlink:href="#quotation-mark-right" />>
+        </svg>
+        <p>李园园上课能认真听讲，积极回答老师问题，对知识点吸收能力很强；李园园上课会有一些小动作，我们会在教学期间积极引导她做好改善。</p>
       </div>
     </div>
 
-    <!-- 内容 -->
-    <div class="course-detail__body">
-
-      <!-- 教学评价 -->
-      <div class="course-detail__comment">
-        <div class="course-detail__comment__wrap">
-          <h5>评价内容</h5>
-          <div class="course-detail__comment__lefticon">
-            <i class="iconfont icon-marks-left"></i>
-          </div>
-          <div class="course-detail__comment__righticon">
-            <i class="iconfont icon-marks-right"></i>
-          </div>
-          <p>李园园上课能认真听讲，积极回答老师问题，对知识点吸收能力很强；李园园上课会有一些小动作，我们会在教学期间积极引导她做好改善。</p>
-        </div>
+    <!-- 教案区域 -->
+    <section class="course-detail__section">
+      <div v-for="i in 4" :key="i">
+        <p>教学目标：</p>
+        <p>1.使学生初步理解速算与巧算的技巧</p>
+        <p>2.简单运用凑整的方法进行运算</p>
+        <p>3.培养学生的观察能力、以及学生的变通能力</p>
+        <p>重点：凑整的思想</p>
+        <p>难点：理解凑整中的补数的运用</p>
       </div>
-
-      <!-- 教案区域 -->
-      <section class="course-detail__section">
-        <div v-for="i in 4" :key="i">
-          <p>教学目标：</p>
-          <p>1.使学生初步理解速算与巧算的技巧</p>
-          <p>2.简单运用凑整的方法进行运算</p>
-          <p>3.培养学生的观察能力、以及学生的变通能力</p>
-          <p>重点：凑整的思想</p>
-          <p>难点：理解凑整中的补数的运用</p>
-        </div>
-      </section>
-
-    </div>
+    </section>
 
     <!-- 课件预览弹出菜单 -->
     <Popup
@@ -77,6 +78,7 @@
         ></cell>
       </Group>
     </Popup>
+
   </div>
 </template>
 
@@ -102,7 +104,6 @@ export default {
     Group,
     Cell,
   },
-
 
   data() {
     return {
@@ -130,21 +131,61 @@ export default {
     currenRoutetPath() {
       return this.$route.path;
     },
+
+    // 是否可以上传作业
+    uploadActive() {
+      return false;
+    },
+
+    // 是否有ppt可以预览
+    pptActive() {
+      return true;
+    },
+
+    // 上传作业的SVG图标id
+    uploadSvgId() {
+      return `#${this.uploadActive ? 'upload-homework-active' : 'upload-homework-disabled'}`;
+    },
+
+    // 上传作业的SVG图标id
+    pptSvgId() {
+      return `#${this.pptActive ? 'ppt-active' : 'ppt-disabled'}`;
+    },
   },
 
   methods: {
+    // 跳转ppt链接
     pptPreview(url) {
       location.href = url;
     },
 
+    // 预览ppt选择菜单
     pptPopup() {
-      this.active = true;
+      if (this.pptActive) {
+        this.active = true;
+      } else {
+        this.$vux.toast.text('该课程暂无PPT课件');
+      }
+    },
+
+    goToUpload() {
+      if (this.uploadActive) {
+        this.$router.push(`${this.currenRoutetPath}/homework`);
+      } else {
+        this.$vux.toast.text('该课程暂无课后作业');
+      }
     },
   },
 };
 </script>
 
 <style lang="less">
+
+@svg-size:40px;
+
+.content-margin(){
+  margin-top:10px;
+}
 
 .border-style() {
   content: " ";
@@ -169,21 +210,6 @@ export default {
 }
 
 .course-detail {
-  position: relative;
-  overflow: hidden;
-
-  &__header {
-    position: fixed;
-    top: 0;
-    z-index: 99;
-    width: 100%;
-    padding-bottom: 10px;
-    background-color: @background-color;
-  }
-
-  &__body {
-    padding-top: 151px;
-  }
 
   &__meta {
     padding: 10px;
@@ -203,7 +229,6 @@ export default {
   &__action {
     display: flex;
     position: relative;
-    overflow: hidden;
     background-color: #fff;
 
     &:before {
@@ -220,6 +245,17 @@ export default {
       transform-origin: 0 0;
     }
 
+    &__svg {
+      margin-right: 12px;
+      height: @svg-size;
+      width: @svg-size;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
     & > a {
       flex: 1;
       position: relative;
@@ -227,6 +263,7 @@ export default {
       justify-content: center;
       align-items: center;
       height: 64px;
+      color: @text-color-default;
 
       &:before {
         .border-row();
@@ -241,20 +278,18 @@ export default {
         border-bottom: 1px solid @border-color;
         transform-origin: 0 100%;
       }
+    }
 
-      & > i {
-        color:@primary-color;
-        font-size: 38px;
-        margin-right: 10px;
-      }
+    &__disabled {
+      color: @text-color-subsidiary !important;
     }
   }
 
   &__comment {
+    .content-margin();
     position: relative;
     padding: 25px 10px 20px 10px;
     background-color: #fff;
-    margin-bottom: 10px;
 
     &:before {
       .border-column();
@@ -295,26 +330,28 @@ export default {
         text-indent:1em;
         font-size: 15px;
       }
+
+      & > svg {
+        position: absolute;
+        width:12px;
+        height: 12px;
+        fill: @text-color-subsidiary;
+      }
     }
 
-    &__lefticon , &__righticon {
-      color: @text-color-subsidiary;
-      font-size: 12px;
-      position: absolute;
+    &__svg-left {
+      left: 8px;
+      top: 5px;
     }
 
-    &__lefticon {
-      left: 5px;
-      top: 4px;
-    }
-
-    &__righticon {
-      right: 5px;
-      bottom: 4px;
+    &__svg-right {
+      right: 8px;
+      bottom: 5px;
     }
   }
 
   &__section {
+    .content-margin();
     padding: 20px 10px;
     background-color: #fff
   }
