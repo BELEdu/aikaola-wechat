@@ -1,11 +1,15 @@
 <template>
   <div class="user-info">
-    <UserInfoHeader
+    <ThePanel
       :click="() => $router.push('/center/user-edition')"
-      :data="user"
-    />
+      :avatar="user.avatar"
+      :name="user.name"
+      right-arrow
+    >
+      <span slot="content">{{user.phone}}</span>
+    </ThePanel>
 
-    <div class="user-info__child-title">
+    <div class="user-info__child-bar">
       <span>我的小孩</span>
       <span
         @click="$router.push('/child-binding')"
@@ -25,19 +29,16 @@
  * @author  hjz
  */
 
-import { Panel } from 'vux';
-import {
-  UserInfoChild,
-  UserInfoHeader,
-} from './components';
+import { ThePanel } from '@/components';
+
+import { UserInfoChild } from './components';
 
 export default {
   name: 'UserInfo',
 
   components: {
-    Panel,
+    ThePanel,
     UserInfoChild,
-    UserInfoHeader,
   },
 
   data: () => ({
@@ -74,48 +75,7 @@ export default {
   overflow: auto;
 }
 
-.user-info__header {
-  position: relative;
-  padding-top: @gutter;
-  margin-bottom: @gutter;
-}
-
-.user-info__header-content {
-  display: flex;
-  padding: @gutter;
-  background-color: #fff;
-}
-
-.user-info__header-avatar {
-  flex: none;
-  margin-right: 12px;
-  height: 65px;
-  width: 65px;
-  border-radius: 5px;
-  overflow: hidden;
-
-  img {
-    height: 100%;
-    width: 100%;
-  }
-}
-
-.user-info__header-desc {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-
-  span:first-of-type {
-    font-size: @text-size-title;
-  }
-
-  span:last-of-type {
-    font-size: @text-size-content;
-    color: @text-color-subsidiary;
-  }
-}
-
-.user-info__child-title {
+.user-info__child-bar {
   display: flex;
   justify-content: space-between;
   padding: 0 @gutter;
