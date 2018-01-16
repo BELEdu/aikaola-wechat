@@ -6,7 +6,7 @@
       :name="user.name"
       right-arrow
     >
-      <span slot="content">{{user.phone}}</span>
+      <span slot="content">手机：{{user.phone}}</span>
     </ThePanel>
 
     <div class="user-info__child-bar">
