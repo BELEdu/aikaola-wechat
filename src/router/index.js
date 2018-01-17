@@ -30,7 +30,6 @@ const router = new Router({
         title: '绑定登录',
       },
     },
-
     {
       path: '/child-binding',
       name: 'ChildBinding',
@@ -39,7 +38,6 @@ const router = new Router({
         title: '绑定学员',
       },
     },
-
     {
       path: '/result',
       name: 'Result',

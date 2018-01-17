@@ -19,6 +19,8 @@
         </TabbarItem>
       </Tabbar>
 
+      <BackTop v-if="false"></BackTop>
+
     </ViewBox>
   </div>
 </template>
@@ -28,6 +30,7 @@
  * @desc 用户主页面
  */
 import { ViewBox, Tabbar, TabbarItem } from 'vux';
+import { BackTop } from '@/components';
 
 export default {
   name: 'User',
@@ -36,6 +39,7 @@ export default {
     ViewBox,
     Tabbar,
     TabbarItem,
+    BackTop,
   },
 
   data: () => ({
@@ -58,20 +62,14 @@ export default {
 <style lang="less">
 
 @svg-height:20px;
-@weui-icon-height: 24px;
 
 .center {
   height: 100%;
 
-  .weui-tabbar__icon {
-    width: @weui-icon-height;
-    height: @weui-icon-height;
-  }
-
   &__svg {
     height: @svg-height;
     width: @svg-height;
-    margin-top: calc((@weui-icon-height - @svg-height) / 2);
+    margin-top: 2px;
     fill: @text-color-secondary;
   }
 
