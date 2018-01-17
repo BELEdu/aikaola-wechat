@@ -9,10 +9,11 @@ import 'whatwg-fetch';
  * 常量配置
  */
 const URL = {
-  // 上线时需拼合为完整的接口地址
-  HOST: '/',
+  HOST: process.env.NODE_ENV === 'production'
+    ? window.location.hostname
+    : '',
   // 接口版本号
-  VERSION: '',
+  VERSION: '/v1',
 };
 
 /**
@@ -39,12 +40,14 @@ const mergeOptions = ({
   body,
   ...restInit
 }) => {
-  const headersOption = new Headers({
-    credentials: 'include',
-    ...headers,
-  });
+  const headersOption = new Headers(headers);
 
-  if (!body) return { headers: headersOption, ...restInit };
+  const init = {
+    credentials: 'include',
+    ...restInit,
+  };
+
+  if (!body) return { headers: headersOption, ...init };
 
   let data = body;
 
@@ -53,7 +56,7 @@ const mergeOptions = ({
     headersOption.append('Content-Type', 'application/json');
   }
 
-  return { headers: headersOption, body: data, ...restInit };
+  return { headers: headersOption, body: data, ...init };
 };
 
 const request = async ({
