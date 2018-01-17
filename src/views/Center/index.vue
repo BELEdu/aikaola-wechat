@@ -28,9 +28,19 @@
 <script>
 /**
  * @desc 用户主页面
+ *
+ * @author hjz
  */
-import { ViewBox, Tabbar, TabbarItem } from 'vux';
+
+import {
+  ViewBox,
+  Tabbar,
+  TabbarItem,
+} from 'vux';
+
 import { BackTop } from '@/components';
+import store from '@/store';
+import Http from '@/plugins/http';
 
 export default {
   name: 'User',
@@ -56,6 +66,25 @@ export default {
       },
     ],
   }),
+
+  beforeRouteEnter(to, from, next) {
+    Http.get('/user_info').then((res) => {
+      store.commit('initUser', res);
+
+      const source = to.path;
+      const hasChild = res.students.length;
+
+      const query = `?from=${source}`;
+
+      if (!res.phone) {
+        next(`/signup${query}`);
+      } else if (!hasChild) {
+        next(`/child-binding${query}`);
+      } else {
+        next();
+      }
+    });
+  },
 };
 </script>
 
