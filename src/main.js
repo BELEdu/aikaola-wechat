@@ -8,6 +8,7 @@ import '@/utils/devAuthorization';
 import Vue from 'vue';
 import FastClick from 'fastclick';
 import router from '@/router';
+import store from '@/store';
 import plugins from '@/plugins';
 import App from './App';
 
@@ -27,5 +28,6 @@ Vue.use(plugins)
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app-box');
