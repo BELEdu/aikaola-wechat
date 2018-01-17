@@ -38,6 +38,7 @@
  */
 import {
   formUtils,
+  userFilter,
 } from '@/mixins';
 
 import {
@@ -62,6 +63,7 @@ export default {
 
   mixins: [
     formUtils,
+    userFilter,
   ],
 
   data: () => ({
@@ -88,7 +90,15 @@ export default {
     },
 
     submit() {
-      this.$router.replace('/child-binding');
+      this.directRoute();
+    },
+
+    directRoute() {
+      const to = this.userInfo.students.length
+        ? this.from
+        : `/child-binding?from=${this.from}`;
+
+      this.$router.replace(to);
     },
   },
 };
