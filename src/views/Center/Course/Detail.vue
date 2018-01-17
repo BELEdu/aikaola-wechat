@@ -16,6 +16,7 @@
         @click="goToUpload"
       >
         <div class="course-detail__action__svg">
+          <badge></badge>
           <svg><use :xlink:href="uploadSvgId" /></svg>
         </div>
         <span>上传作业</span>
@@ -27,6 +28,7 @@
         @click="pptPopup"
       >
         <div class="course-detail__action__svg">
+          <badge></badge>
           <svg><use :xlink:href="pptSvgId" /></svg>
         </div>
         <span>课件预览</span>
@@ -92,6 +94,7 @@ import {
   PopupHeader,
   Group,
   Cell,
+  Badge,
 } from 'vux';
 
 export default {
@@ -103,6 +106,7 @@ export default {
     PopupHeader,
     Group,
     Cell,
+    Badge,
   },
 
   data() {
@@ -134,7 +138,7 @@ export default {
 
     // 是否可以上传作业
     uploadActive() {
-      return false;
+      return true;
     },
 
     // 是否有ppt可以预览
@@ -246,6 +250,7 @@ export default {
     }
 
     &__svg {
+      position: relative;
       margin-right: 12px;
       height: @svg-size;
       width: @svg-size;
@@ -253,6 +258,12 @@ export default {
       svg {
         width: 100%;
         height: 100%;
+      }
+
+      .vux-badge {
+        position: absolute;
+        right: -5px;
+        top: 0;
       }
     }
 
