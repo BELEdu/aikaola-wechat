@@ -10,7 +10,12 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'assets/1.0.0/wechat',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/v1': {
+        target: 'https://oa-wechat.caihonggou.com',
+        changeOrigin: true,
+      },
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
