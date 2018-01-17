@@ -39,6 +39,7 @@
  */
 import {
   formUtils,
+  userFilter,
 } from '@/mixins';
 
 import {
@@ -63,6 +64,7 @@ export default {
 
   mixins: [
     formUtils,
+    userFilter,
   ],
 
   data: () => ({
@@ -89,7 +91,13 @@ export default {
     },
 
     submit() {
-      this.$router.replace('/center');
+      this.directRoute();
+    },
+
+    directRoute() {
+      const to = this.from || '/center/user-info';
+
+      this.$router.replace(to);
     },
   },
 };
