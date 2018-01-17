@@ -3,6 +3,7 @@ import { ToastPlugin, LoadingPlugin } from 'vux';
 
 // 全局样式
 import '@/styles/global.less';
+import '@/utils/devAuthorization';
 
 import Vue from 'vue';
 import FastClick from 'fastclick';
