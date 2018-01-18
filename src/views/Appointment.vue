@@ -4,16 +4,16 @@
 
       <!-- 学员姓名 -->
       <XInput
-        v-model="form.myName"
+        v-model="form.student_name"
         title="学员姓名"
         placeholder="请输入学员姓名"
+        :max="10"
         required
       />
 
       <!-- 手机号码 -->
       <XInput
-        ref="myMoible"
-        v-model="form.myMoible"
+        v-model="form.phone"
         title="手机号码"
         placeholder="请输入手机号码"
         keyboard="number"
@@ -45,7 +45,7 @@
           class="appointment__poupup"
         >
           <Checklist
-            v-model="form.myGrade"
+            v-model="form.grade"
             :max="1"
             :options="gradeData"
             label-position="right"
@@ -78,7 +78,7 @@
         />
         <Group gutter="0">
           <Checklist
-            v-model="form.mySubjects"
+            v-model="form.subject"
             :options="subjectsData"
             label-position="right"
           />
@@ -92,8 +92,8 @@
         is-link
         @click.native="active.datetime = true"
       >
-        <span :class="{'appointment__text': !!form.myDate}">
-          {{ form.myDate === '' ? '请选择时间' : form.myDate}}
+        <span :class="{'appointment__text': !!form.date}">
+          {{ form.date === '' ? '请选择时间' : form.date}}
         </span>
       </Cell>
 
@@ -101,7 +101,7 @@
       <Datetime
         v-show="false"
         title="隐藏的选择日期组件"
-        v-model="form.myDate"
+        v-model="form.date"
         format="YYYY-MM-DD"
         year-row="{value}年"
         month-row="{value}月"
@@ -119,14 +119,6 @@
         type="primary"
         @click.native="beforeSubmit"
       >立即预约</XButton>
-
-      <XButton
-        @click.native="isResultSuccess(true)"
-      >成功</XButton>
-
-      <XButton
-        @click.native="isResultSuccess(false)"
-      >失败</XButton>
     </div>
   </ViewBox>
 </template>
@@ -146,9 +138,11 @@ import {
   PopupHeader,
   Datetime,
   ViewBox,
+  dateFormat,
 } from 'vux';
 
 import { formUtils, resultTool, loadingTool } from '@/mixins';
+import { throws } from 'assert';
 
 const MODULE_TEST = '智能测试';
 const MODULE_COURSE = '课程试听';
@@ -174,19 +168,20 @@ export default {
     return {
       // 表单
       form: {
-        myName: '',
-        myMoible: '',
-        myGrade: [],
-        mySubjects: [],
-        myDate: '',
+        student_name: '',
+        phone: '',
+        grade: [],
+        subject: [],
+        date: '',
       },
 
+      // 校验文案
       rules: {
-        myName: '请输入学员姓名',
-        myMoible: '请输入手机号码',
-        myGrade: '请选择年级',
-        mySubjects: '请选择至少一个学科',
-        myDate: '请选择时间',
+        student_name: '请输入学员姓名',
+        phone: '请输入手机号码',
+        grade: '请选择年级',
+        subject: '请选择至少一个学科',
+        date: '请选择时间',
       },
 
       // 弹出菜单控制器
@@ -196,64 +191,15 @@ export default {
         datetime: false,
       },
 
-      gradeData: [{
-        key: 1,
-        value: '小学一年级',
-      }, {
-        key: 2,
-        value: '小学二年级',
-      }, {
-        key: 3,
-        value: '小学三年级',
-      }, {
-        key: 4,
-        value: '小学四年级',
-      }, {
-        key: 5,
-        value: '小学五年级',
-      }, {
-        key: 6,
-        value: '小学六年级',
-      }, {
-        key: 7,
-        value: '初中一年级',
-      }, {
-        key: 8,
-        value: '初中二年级',
-      }, {
-        key: 9,
-        value: '初中三年级',
-      }, {
-        key: 10,
-        value: '高中一年级',
-      }, {
-        key: 11,
-        value: '高中二年级',
-      }, {
-        key: 12,
-        value: '高中三年级',
-      }],
-
-      subjectsData: [{
-        key: 1,
-        value: '数学',
-      }, {
-        key: 2,
-        value: '物理',
-      }, {
-        key: 3,
-        value: '化学',
-      }, {
-        key: 4,
-        value: '英语',
-      }],
+      gradeData: [],
+      subjectsData: [],
     };
   },
 
   computed: {
     // 年级文本
     gradeText() {
-      const selectedGrade = this.form.myGrade;
+      const selectedGrade = this.form.grade;
       if (selectedGrade.length > 0) {
         return this.gradeData
           .filter(grade => selectedGrade.includes(grade.key))
@@ -265,7 +211,7 @@ export default {
 
     // 学科文本
     subjectsText() {
-      const selectedSubjects = this.form.mySubjects;
+      const selectedSubjects = this.form.subject;
       if (selectedSubjects.length > 0) {
         return this.subjectsData
           .filter(subject => selectedSubjects.includes(subject.key))
@@ -277,22 +223,18 @@ export default {
 
     // 今天的日期
     currentDate() {
-      const now = new Date();
-      const cyear = now.getFullYear();
-      let cmonth = now.getMonth() + 1;
-      let cday = now.getDate();
-      if (cmonth < 10) {
-        cmonth = `0${cmonth}`;
-      }
-      if (cday < 10) {
-        cday = `0${cday}`;
-      }
-      return `${cyear}-${cmonth}-${cday}`;
+      return dateFormat(new Date(), 'YYYY-MM-DD');
     },
 
     // 预约类型是否是"智能测试"
     isTypeTest() {
       return this.$route.params.type === 'test';
+    },
+
+    // 手机号格式是否正确
+    isPhone() {
+      const reg = /^1\d{10}$/;
+      return reg.test(this.form.phone);
     },
   },
 
@@ -311,7 +253,7 @@ export default {
 
     // 将日期设置为今天
     setToday() {
-      this.form.myDate = this.currentDate;
+      this.form.date = this.currentDate;
     },
 
     // 提交前校验
@@ -320,44 +262,85 @@ export default {
       const validRequired = this.validateForm(this.form, this.rules);
 
       if (validRequired) {
-        this.submit();
+        if (this.isPhone) {
+          this.submit();
+        } else {
+          this.$vux.toast.text('请输入正确的手机号码');
+        }
       }
     },
 
     // 提交表单
     submit() {
+      // 处理表单数据
       const data = {
         ...this.form,
-        myGrade: this.form.myGrade[0],
+        grade: this.form.grade[0],
       };
 
-      // eslint-disable-next-line
-      console.log(data);
+      // 接口地址
+      const api = `/reservation/${this.isTypeTest ? 'store_exam' : 'store_schedule'}`;
+
+      this.$http.post(api, data)
+        .then(() => {
+          this.isResultSuccess(true);
+        })
+        .catch((error) => {
+          if (error.status === 400) {
+            this.isResultSuccess(false, error.message);
+          } else {
+            throw error;
+          }
+        })
+        .catch(this.alertError);
     },
 
-    // 表单提交结果后续处理
-    isResultSuccess(RightWrong) {
-      const isSuccess = RightWrong;
+    /**
+     * @desc 表单提交结果后续处理
+     * @param isSuccess {Boolean} 是否成功
+     * @param message   {String} 错误展示文案
+     */
+    isResultSuccess(isSuccess, message = '不好意思，您的预约出错') {
       this.toResultPage({
         status: isSuccess ? 'success' : 'error',
         title: isSuccess ? '预约成功' : '预约失败',
-        message: isSuccess ? `${this.isTypeTest ? MODULE_TEST : MODULE_COURSE}预约成功` : '您已预约，请勿重复预约',
-        to: '/appointment/test',
-        time: 3,
+        message: isSuccess ? `${this.isTypeTest ? MODULE_TEST : MODULE_COURSE}预约成功` : message,
+        // to: '/appointment/test',
+        // time: 3,
+      }, false);
+    },
+
+    // 获年级 & 学科取数据源
+    getBeforeData() {
+      this.$http.get('/reservation/store_before')
+      .then(({ grade, subject }) => {
+        this.gradeData = this.changeOptionData(grade);
+        this.subjectsData = this.changeOptionData(subject);
+      })
+      .catch(({ message }) => {
+        this.alertError(message);
+      })
+      .then(() => {
+        this.hideLoading();
       });
     },
+
+    // 变换数据结构
+    changeOptionData(myArray) {
+      return myArray.map(item => ({
+        key: item.value,
+        value: item.display_name,
+      }));
+    },
+
   },
 
   created() {
-    this.hideLoading();
+    this.getBeforeData();
   },
 
   beforeRouteEnter(to, from, next) {
-    if (to.params.type === 'test') {
-      document.title = '智能测试';
-    } else {
-      document.title = '课程试听';
-    }
+    document.title = to.params.type === 'test' ? '智能测试' : '课程试听';
     next();
   },
 };
