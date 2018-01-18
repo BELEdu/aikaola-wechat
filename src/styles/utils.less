@@ -43,21 +43,39 @@
   text-overflow: ellipsis;
 }
 
-.right-arrow {
+/**
+ * 左右箭头
+ */
+.right-arrow ,
+.left-arrow {
   position: relative;
 }
 
-.right-arrow::after {
+.right-arrow::after,
+.left-arrow::before {
   content: " ";
   display: inline-block;
   height: 6px;
   width: 6px;
-  border-width: 2px 2px 0 0;
   border-color: #C8C8CD;
   border-style: solid;
-  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
   position: absolute;
   top: 50%;
-  right: 15px;
   margin-top: -4px;
 }
+
+.right-arrow::after {
+  border-width: 2px 2px 0 0;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  right: 15px;
+}
+
+.left-arrow::before {
+  border-width: 0 0  2px 2px;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  left: 15px;
+}
+
+
+
+
