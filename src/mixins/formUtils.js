@@ -53,8 +53,8 @@ export default {
      * @desc 解析后端错误体
      */
     $_resolveError(body) {
-      const message = body.error
-        ? this.resolveFirstMessage(body.error)
+      const message = body.errors
+        ? this.$_resolveFirstMessage(body.errors)
         : body.message;
 
       return message;
