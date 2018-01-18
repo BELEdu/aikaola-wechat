@@ -27,17 +27,49 @@ export default {
      * @param   value   字段对应值
      * @param   mse     验证失败信息
      */
-    validateProp(value, msg) {
-      if (!value) this.$vux.toast.text(msg);
+    validateProp(value, message) {
+      const bool = value instanceof Array
+        ? !!value.length
+        : Boolean(value);
 
-      return !!value;
+      if (!bool) this.alertError(message);
+
+      return bool;
     },
 
     /**
-     * @desc 后端错误信息提示
+     * @desc 错误信息回显
+     *
+     * @param { Object | string } error
      */
-    alertError(msg) {
-      this.$vux.toast.text(msg);
+    alertError(error) {
+      const message = typeof error === 'object'
+        ? this.$_resolveError(error) : error;
+
+      this.$vux.toast.text(message);
+    },
+
+    /**
+     * @desc 解析后端错误体
+     */
+    $_resolveError(body) {
+      const message = body.error
+        ? this.resolveFirstMessage(body.error)
+        : body.message;
+
+      return message;
+    },
+
+    /**
+     * @desc 从body.error中解析出错误信息
+     */
+    $_resolveFirstMessage(errors) {
+      const key = Object.keys(errors)[0];
+
+      const message = errors[key] instanceof Array
+        ? errors[key][0] : errors[key];
+
+      return message;
     },
   },
 };
