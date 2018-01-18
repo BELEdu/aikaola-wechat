@@ -142,7 +142,6 @@ import {
 } from 'vux';
 
 import { formUtils, resultTool, loadingTool } from '@/mixins';
-import { throws } from 'assert';
 
 const MODULE_TEST = '智能测试';
 const MODULE_COURSE = '课程试听';
