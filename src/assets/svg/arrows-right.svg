@@ -1,2 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <!-- 右箭头 -->
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1516067145411" class="icon" style="" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3434" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64"><defs><style type="text/css"></style></defs><path d="M316.94001881 1013.77259529l538.84327336-501.77035875-538.84327336-501.77147702-119.7466772 111.50837599 419.09771443 390.26310103-419.09771443 390.26310104 119.7466772 111.50725771z" p-id="3435"></path></svg>
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <path d="M316.94001881 1013.77259529l538.84327336-501.77035875-538.84327336-501.77147702-119.7466772 111.50837599 419.09771443 390.26310103-419.09771443 390.26310104 119.7466772 111.50725771z"></path>
+</svg>
