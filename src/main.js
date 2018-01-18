@@ -11,6 +11,7 @@ import router from '@/router';
 import store from '@/store';
 import plugins from '@/plugins';
 import App from './App';
+import * as directives from './directives';
 
 FastClick.attach(document.body);
 
@@ -20,6 +21,11 @@ const req = require.context('./assets/svg', true, /\.svg$/);
 requireAll(req);
 
 Vue.config.productionTip = false;
+
+// 注册全局指令
+Object.keys(directives).forEach((key) => {
+  Vue.directive(key, directives[key]);
+});
 
 Vue.use(plugins)
   .use(ToastPlugin)
