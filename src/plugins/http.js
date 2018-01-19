@@ -10,7 +10,7 @@ import 'whatwg-fetch';
  */
 const URL = {
   HOST: process.env.NODE_ENV === 'production'
-    ? window.location.hostname
+    ? `https://${window.location.hostname}`
     : '',
   // 接口版本号
   VERSION: '/v1',
