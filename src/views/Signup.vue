@@ -11,14 +11,13 @@
         placeholder="请输入姓名"
       />
       <XInput
-        v-model="data.telphone"
+        v-model="data.mobile"
         title="手机"
         placeholder="请输入手机号"
       />
       <VerificationCode
         v-model="data.code"
-        :telphone="data.telphone"
-        url="www"
+        :mobile="data.mobile"
       />
     </Group>
     <XButton
@@ -26,7 +25,7 @@
       type="primary"
       :show-loading="submitLoading"
       text="绑定登录"
-      @click.native="v_submit"
+      @click.native="() => v_submit()"
     />
   </div>
 </template>
@@ -69,30 +68,21 @@ export default {
   data: () => ({
     data: {
       name: '',
-      telphone: '',
+      mobile: '',
       code: '',
     },
 
     rules: {
       name: '请填写姓名',
-      telphone: '请填写手机号码',
+      mobile: '请填写手机号码',
       code: '请输入验证码',
     },
 
-    submitLoading: false,
+    // 提交数据的后端接口地址
+    url: '/bind/bind_phone',
   }),
 
   methods: {
-    v_submit() {
-      const valid = this.validateForm(this.data, this.rules);
-
-      if (valid) this.submit();
-    },
-
-    submit() {
-      this.directRoute();
-    },
-
     directRoute() {
       const to = this.userInfo.students.length
         ? this.from
