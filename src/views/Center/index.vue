@@ -40,7 +40,6 @@ import {
 
 import { BackTop } from '@/components';
 import store from '@/store';
-import Http from '@/plugins/http';
 
 export default {
   name: 'User',
@@ -68,22 +67,23 @@ export default {
   }),
 
   beforeRouteEnter(to, from, next) {
-    Http.get('/user_info').then((res) => {
-      store.commit('initUser', res);
+    store.dispatch('initUser')
+      .then((res) => {
+        const source = to.path;
+        const hasChild = res.students.length;
 
-      const source = to.path;
-      const hasChild = res.students.length;
+        const query = `?from=${source}`;
 
-      const query = `?from=${source}`;
-
-      if (!res.phone) {
-        next(`/signup${query}`);
-      } else if (!hasChild) {
-        next(`/child-binding${query}`);
-      } else {
         next();
-      }
-    });
+
+        if (!res.phone) {
+          next(`/signup${query}`);
+        } else if (!hasChild) {
+          next(`/child-binding${query}`);
+        } else {
+          next();
+        }
+      });
   },
 };
 </script>
