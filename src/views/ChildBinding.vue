@@ -5,20 +5,18 @@
       gutter="15px"
     >
       <XInput
-        ref="name"
-        v-model="data.name"
+        v-model="data.student_name"
         title="学员姓名"
         placeholder="请输入姓名"
       />
       <XInput
-        v-model="data.identifier"
+        v-model="data.indentify_code"
         title="识别码"
         placeholder="请输入识别码"
       />
       <VerificationCode
         v-model="data.code"
-        telphone="11111"
-        url="www"
+        :mobile="mobile"
         label-width="5em"
       />
     </Group>
@@ -27,7 +25,7 @@
       type="primary"
       :show-loading="submitLoading"
       text="确认"
-      @click.native="v_submit"
+      @click.native="() => v_submit()"
     />
   </div>
 </template>
@@ -53,7 +51,7 @@ import {
 } from 'vux';
 
 export default {
-  name: 'Signup',
+  name: 'ChildBinding',
 
   components: {
     Group,
@@ -69,31 +67,34 @@ export default {
 
   data: () => ({
     data: {
-      name: '',
-      identifier: '',
+      student_name: '',
+      indentify_code: '',
       code: '',
     },
 
     rules: {
-      name: '请填写姓名',
-      identifier: '请填写识别码',
+      student_name: '请填写姓名',
+      indentify_code: '请填写识别码',
       code: '请输入验证码',
     },
 
     submitLoading: false,
+
+    // 提交数据接口地址
+    url: '/bind/bind_child',
   }),
 
+  computed: {
+    mobile() {
+      return this.userInfo.phone;
+    },
+  },
+
+  created() {
+    this.data.mobile = this.mobile;
+  },
+
   methods: {
-    v_submit() {
-      const valid = this.validateForm(this.data, this.rules);
-
-      if (valid) this.submit();
-    },
-
-    submit() {
-      this.directRoute();
-    },
-
     directRoute() {
       const to = this.from || '/center/user-info';
 
