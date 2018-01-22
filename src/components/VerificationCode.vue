@@ -16,13 +16,14 @@
       @click.native="v_requestCode"
       mini
     >
-      <span v-show="showCounter && !loading">
+      <span v-if="loading">获取中...</span>
+      <span v-else-if="showCounter && !loading">
         <Countdown
-          v-model="counter"
+          :value="counter"
           @on-finish="vm_countOver"
         />s
       </span>
-      <span v-show="!showCounter && !loading">
+      <span v-else>
         获取验证码
       </span>
     </XButton>
@@ -60,7 +61,7 @@ export default {
     },
 
     // 接收验证码的手机
-    telphone: {
+    mobile: {
       type: String,
       required: true,
     },
@@ -68,7 +69,7 @@ export default {
     // 获取验证码接口地址
     url: {
       type: String,
-      required: true,
+      default: '/bind/send_code',
     },
 
     // 独立设置标签宽度
@@ -86,7 +87,7 @@ export default {
   methods: {
     v_requestCode() {
       const valid = this.validateProp(
-        this.telphone,
+        this.mobile,
         '请输入手机号码',
       );
 
@@ -96,16 +97,14 @@ export default {
     m_requestCode() {
       this.loading = true;
 
-      setTimeout(() => {
-        this.loading = false;
-      }, 1000);
-
-      this.showCounter = true;
+      this.$http.post(this.url, { mobile: this.mobile })
+        .then(() => { this.showCounter = true; })
+        .catch(this.alertError)
+        .then(() => { this.loading = false; });
     },
 
     vm_countOver() {
       this.showCounter = false;
-      this.counter = 10;
     },
   },
 };
