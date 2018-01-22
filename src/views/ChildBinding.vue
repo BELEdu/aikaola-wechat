@@ -10,7 +10,7 @@
         placeholder="请输入姓名"
       />
       <XInput
-        v-model="data.indentify_code"
+        v-model="data.identify_code"
         title="识别码"
         placeholder="请输入识别码"
       />
@@ -38,6 +38,7 @@
 import {
   formUtils,
   userFilter,
+  resultTool,
 } from '@/mixins';
 
 import {
@@ -63,18 +64,19 @@ export default {
   mixins: [
     formUtils,
     userFilter,
+    resultTool,
   ],
 
   data: () => ({
     data: {
       student_name: '',
-      indentify_code: '',
+      identify_code: '',
       code: '',
     },
 
     rules: {
       student_name: '请填写姓名',
-      indentify_code: '请填写识别码',
+      identify_code: '请填写识别码',
       code: '请输入验证码',
     },
 
@@ -98,7 +100,11 @@ export default {
     directRoute() {
       const to = this.from || '/center/user-info';
 
-      this.$router.replace(to);
+      this.toResultPage({
+        title: '绑定结果',
+        message: '绑定成功，稍后跳转',
+        to,
+      });
     },
   },
 };

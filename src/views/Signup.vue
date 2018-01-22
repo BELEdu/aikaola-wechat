@@ -38,6 +38,7 @@
 import {
   formUtils,
   userFilter,
+  resultTool,
 } from '@/mixins';
 
 import {
@@ -63,6 +64,7 @@ export default {
   mixins: [
     formUtils,
     userFilter,
+    resultTool,
   ],
 
   data: () => ({
@@ -88,7 +90,11 @@ export default {
         ? this.from
         : `/child-binding?from=${this.from}`;
 
-      this.$router.replace(to);
+      this.toResultPage({
+        title: '绑定结果',
+        message: '绑定成功，稍后跳转',
+        to,
+      });
     },
   },
 };
