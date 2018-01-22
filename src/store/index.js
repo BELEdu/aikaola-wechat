@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Http from '@/plugins/http';
 
 Vue.use(Vuex);
 
@@ -12,6 +13,17 @@ const store = new Vuex.Store({
     initUser(state, userInfo) {
       // eslint-disable-next-line
       state.userInfo = userInfo;
+    },
+  },
+
+  actions: {
+    initUser({ commit }) {
+      return Http.get('/center/classes')
+        .then((res) => {
+          commit('initUser', res);
+
+          return res;
+        });
     },
   },
 });
