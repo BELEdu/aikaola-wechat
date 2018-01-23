@@ -2,23 +2,26 @@
   <div class="user-info">
     <ThePanel
       :click="() => $router.push('/center/user-edition')"
-      :avatar="user.avatar"
-      :name="user.name"
+      :avatar="userAvatar"
+      :name="userInfo.name"
       right-arrow
     >
-      <span slot="content">手机：{{user.phone}}</span>
+      <span slot="content">手机：{{userInfo.phone}}</span>
     </ThePanel>
 
     <div class="user-info__child-bar">
       <span>我的小孩</span>
       <span
         @click="$router.push('/child-binding')"
-      ><svg><use xlink:href="#plus"/></svg> 添加小孩</span>
+      >
+        <svg><use xlink:href="#plus"/></svg>添加小孩
+      </span>
     </div>
 
     <UserInfoChild
-      @click.native="$router.push('/center/user-child/1')"
-      :data="childInfo"
+      v-for="child in userInfo.students"
+      :key="child.id"
+      :data="child"
     />
   </div>
 </template>
@@ -29,8 +32,9 @@
  * @author  hjz
  */
 
+import { mapState } from 'vuex';
 import { ThePanel } from '@/components';
-
+import defaultAvatar from '@/assets/avatar-default.svg';
 import { UserInfoChild } from './components';
 
 export default {
@@ -41,32 +45,12 @@ export default {
     UserInfoChild,
   },
 
-  data: () => ({
-    user: {
-      avatar: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
-      name: '包着海苔的饭',
-      phone: 13711112222,
+  computed: {
+    ...mapState(['userInfo']),
+    userAvatar() {
+      return this.userInfo.headimgurl || defaultAvatar;
     },
-
-    childInfo: {
-      avatar: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
-      name: '王小明',
-      courses: [
-        {
-          name: '中学英语',
-          rate: '明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真',
-          date: '2018-01-12',
-          time: 3,
-        },
-        {
-          name: '小学奥数',
-          rate: '明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真啊，明明很认真',
-          date: '2018-01-12',
-          time: 3,
-        },
-      ],
-    },
-  }),
+  },
 };
 </script>
 
