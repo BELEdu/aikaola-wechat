@@ -56,7 +56,7 @@ export default {
 
   data: () => ({
     data: {
-      name: '包着海苔的饭',
+      name: '',
     },
 
     rules: {
@@ -68,6 +68,10 @@ export default {
     fontColor: '#b2b2b2',
   }),
 
+  created() {
+    this.data.name = this.$store.state.userInfo.name;
+  },
+
   methods: {
     v_submit() {
       const valid = this.validateForm(this.data, this.rules);
@@ -76,7 +80,15 @@ export default {
     },
 
     submit() {
-      this.$router.replace('/center');
+      this.submitLoading = true;
+
+      const url = '/center/change_name';
+
+      this.$http.post(url, this.data)
+        .then(() => this.$store.dispatch('initUser'))
+        .then(() => this.$router.replace('/center'))
+        .catch(this.alertError)
+        .then(() => { this.submitLoading = false; });
     },
   },
 };
