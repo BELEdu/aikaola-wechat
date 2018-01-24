@@ -22,7 +22,7 @@ export default {
     },
 
     {
-      path: 'user-child/:id',
+      path: 'user-child/:studentId/:classId',
       name: 'UserChild',
       component: views.UserChild,
       meta: {

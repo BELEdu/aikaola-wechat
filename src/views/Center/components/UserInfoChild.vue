@@ -1,27 +1,15 @@
 <template>
   <div class="user-info__child">
     <div class="user-info__child__title">
-      <span><img :src="data.avatar"></span>
-      <span>{{data.name}}</span>
+      <span><img v-imgSrc="data.head_url"></span>
+      <span>{{data.display_name}}</span>
     </div>
-    <div
-      v-for="course in data.courses"
-      :key="course.name"
-      class="right-arrow user-info__child__content"
-    >
-      <div>课程名称：{{course.name}}</div>
-      <div>剩余课时：{{course.time}}课时</div>
-      <div class="user-info__child__content-rate">
-        <span>剩余评价：</span>
-        <span>
-          <UserInfoChildEvaluation
-            :content="course.rate"
-            :ellipsis="course.date"
-            :sticky="course.date"
-          />
-        </span>
-      </div>
-    </div>
+    <UserInfoChildCourse
+      v-for="course in data.classes"
+      :key="course.product_id"
+      :data="course"
+      @click.native="toCourseInfo(data.id, course.product_id)"
+    />
   </div>
 </template>
 
@@ -30,19 +18,27 @@
  * @desc    个人中心 - 用户信息 - 孩子卡片
  * @author  hjz
  */
-import UserInfoChildEvaluation from './UserInfoChildEvaluation';
+
+import UserInfoChildCourse from './UserInfoChildCourse';
 
 export default {
   name: 'UserInfoChild',
 
   components: {
-    UserInfoChildEvaluation,
+    UserInfoChildCourse,
   },
 
   props: {
     data: {
       type: Object,
       required: true,
+    },
+  },
+
+  methods: {
+    toCourseInfo(studentId, classId) {
+      const path = `/center/user-child/${studentId}/${classId}`;
+      this.$router.push(path);
     },
   },
 };
