@@ -38,6 +38,7 @@ import {
   TabbarItem,
 } from 'vux';
 
+import { mapState } from 'vuex';
 import { BackTop } from '@/components';
 import store from '@/store';
 
@@ -55,7 +56,7 @@ export default {
     navigation: [
       {
         svgId: 'course-table',
-        link: '/center/course',
+        link: '/center/course/noid',
         text: '课程表',
       },
       {
@@ -65,6 +66,21 @@ export default {
       },
     ],
   }),
+
+  computed: {
+    ...mapState({
+      students: state => state.userInfo.students,
+    }),
+
+    defaultStudentId() {
+      return this.students[0].id;
+    },
+  },
+
+  mounted() {
+    // 页面渲染后，去往课程表的链接重置为第一个绑定的学员id
+    this.navigation[0].link = `/center/course/${this.defaultStudentId}`;
+  },
 
   beforeRouteEnter(to, from, next) {
     store.dispatch('initUser')
