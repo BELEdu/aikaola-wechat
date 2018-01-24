@@ -42,7 +42,7 @@ export default {
     /* 课程管理 */
 
     {
-      path: '/center/course',
+      path: '/center/course/:studentId',
       name: 'CenterCourse',
       component: views.CenterCourse,
       meta: {
@@ -51,7 +51,7 @@ export default {
     },
 
     {
-      path: '/center/course/:childId/:couresId',
+      path: '/center/course/:studentId/:couresId',
       name: 'CenterCourseDetail',
       component: views.CenterCourseDetail,
       meta: {
@@ -60,7 +60,7 @@ export default {
     },
 
     {
-      path: '/center/course/:childId/:couresId/homework',
+      path: '/center/course/:studentId/:couresId/homework',
       name: 'CenterCourseHomework',
       component: views.CenterCourseHomework,
       meta: {
