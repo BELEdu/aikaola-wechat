@@ -2,14 +2,17 @@
   <div class="course-table">
 
     <!-- 孩子选择菜单 -->
-    <ChildrenSelect
+    <StudentSelect
       :select-id="currentId"
-      :data="children"
-      @on-change="changeChild"
+      :data="students"
+      @on-change="changeStudent"
     />
 
     <!-- 日历 -->
-    <CourseCalendar />
+    <CourseCalendar
+      :student-id="currentId"
+      :key="studentId"
+    />
 
   </div>
 </template>
@@ -18,7 +21,9 @@
 /**
  * @desc 课程表
  */
-import { CourseCalendar, CourseMask, ChildrenSelect } from './components';
+
+import { mapState } from 'vuex';
+import { CourseCalendar, CourseMask, StudentSelect } from './components';
 
 export default {
   name: 'course-table',
@@ -26,53 +31,44 @@ export default {
   components: {
     CourseCalendar,
     CourseMask,
-    ChildrenSelect,
+    StudentSelect,
   },
 
   data() {
     return {
-      currentId: 1, // 当前选中的孩子id
-
-      children: [
-        {
-          id: 1,
-          name: '张学员',
-          avatar: 'https://static.vux.li/uploader_bg.png',
-        },
-        {
-          id: 2,
-          name: '李学员',
-          avatar: 'https://static.vux.li/uploader_bg.png',
-        },
-        {
-          id: 3,
-          name: '斯琴高娃',
-          avatar: 'https://static.vux.li/uploader_bg.png',
-        },
-        {
-          id: 4,
-          name: '尼古拉夫斯基',
-          avatar: '',
-        },
-        {
-          id: 5,
-          name: '小明',
-          avatar: 'https://static.vux.li/uploader_bg.png',
-        },
-      ],
-
+      currentId: 0, // 当前选中的学员id
     };
   },
 
   computed: {
+    ...mapState({
+      students: state => state.userInfo.students,
+    }),
 
+    studentId() {
+      return +this.$route.params.studentId;
+    },
   },
 
   methods: {
-    // 改变当前选中的孩子
-    changeChild(id) {
+    // 改变当前选中的学员
+    changeStudent(id) {
       this.currentId = id;
+      this.$router.replace(`/center/course/${id}`);
     },
+
+    // 进入该页面时设置默认学员
+    setDefaultStudent() {
+      this.currentId = this.studentId;
+    },
+  },
+
+  mounted() {
+
+  },
+
+  created() {
+    this.setDefaultStudent();
   },
 };
 </script>

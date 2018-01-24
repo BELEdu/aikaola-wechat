@@ -1,25 +1,28 @@
 <template>
-  <div class="children-select">
+  <div class="student-select">
     <a
-      v-for="(child,index) in data"
+      v-for="(student,index) in data"
       :key="index"
-      @click="onChange(child.id)"
-      :class="{'active':(child.id === selectId)}"
+      @click="onChange(student.id)"
+      :class="{'active':(student.id === selectId)}"
     >
       <!-- 透明遮罩层 -->
       <div
-        v-if="child.id !== selectId"
-        class="children-select__mask"
+        v-if="student.id !== selectId"
+        class="student-select__mask"
       ></div>
 
       <!-- 头像 -->
       <img
-        v-img-src="child.avatar"
-        :alt="child.name"
+        v-img-src="student.head_url"
+        :alt="student.display_name"
       >
 
       <!-- 姓名 -->
-      <p class="ellipsis">{{child.name}}</p>
+      <p class="ellipsis">
+        {{student.display_name}}
+      </p>
+
     </a>
   </div>
 </template>
@@ -27,7 +30,7 @@
 <script>
 
 export default {
-  name: 'children-select',
+  name: 'student-select',
 
   props: {
     selectId: {
@@ -51,10 +54,10 @@ export default {
 
 <style lang="less">
 
-@child-wrap: calc(~"(100vw - 10px) / 5");
+@student-wrap: calc(~"(100vw - 10px) / 5");
 @avatar-width: calc(~"((100vw - 10px) / 5) - 12px");
 
-.children-select {
+.student-select {
   margin: 10px 0;
   background-color: #fff;
   padding: 10px 5px;
@@ -63,7 +66,7 @@ export default {
   & > a {
     position: relative;
     display: inline-block;
-    width: @child-wrap;
+    width: @student-wrap;
     text-align: center;
     line-height: 1;
 
