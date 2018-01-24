@@ -42,5 +42,27 @@ export default {
 </script>
 
 <style lang="less">
+@gutter: 15px;
 
+.user-info__child__content {
+  position: relative;
+  border-top: 1px solid @bd-color-base;
+  padding: @gutter 2.5em @gutter 0;
+  padding-left: 0;
+  font-size: @text-size-content;
+  color: @text-color-secondary;
+}
+
+.user-info__child__content-rate {
+  display: flex;
+  width: 100%;
+
+  span:first-of-type {
+    flex-shrink: 0;
+  }
+
+  span:last-of-type {
+    flex-grow: 1;
+  }
+}
 </style>
