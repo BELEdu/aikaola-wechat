@@ -2,6 +2,8 @@
  * @desc 个人中心 - 孩子信息 - 评价信息
  */
 
+/* eslint-disable camelcase */
+
 export default {
   name: 'UserChildEvaluation',
 
@@ -17,7 +19,7 @@ export default {
   render: (h, ctx) => {
     const gutter = '15px';
 
-    const { teacher, date, test } = ctx.props.data;
+    const { teacher_name, comment_date, comment } = ctx.props.data;
 
     const renderSubsidiray = content => h('span',
       {
@@ -47,11 +49,11 @@ export default {
             },
           },
           [
-            renderSubsidiray(`教师：${teacher}`),
-            renderSubsidiray(date),
+            renderSubsidiray(`教师：${teacher_name}`),
+            renderSubsidiray(comment_date),
           ],
         ),
-        h('div', null, test),
+        h('div', null, comment),
       ],
     );
   },

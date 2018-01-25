@@ -1,33 +1,39 @@
 <template>
-  <div class="user-child">
+  <div
+    v-if="data"
+    class="user-child"
+  >
     <ThePanel
       v-slide:left="() => slideCourse(1)"
       v-slide:right="() => slideCourse(-1)"
-      :avatar="data.avatar"
-      :name="data.name"
+      :avatar="childAvatar"
+      :name="data.display_name"
     >
-      <span slot="content">
-        课程名称：{{course.name}}
+      <span class="ellipsis" slot="content">
+        课程名称：{{classInfo.product_name}}
       </span>
       <span slot="content">
-        剩余课时：{{course.rest}}小时
+        剩余课时：{{classInfo.remain_total}}小时
       </span>
 
       <SwiperIndicator
-        :value="courseIndex"
-        :length="data.courses.length"
+        :value="indicatorIndex"
+        :length="data.classes.length"
       />
     </ThePanel>
 
     <div
+      v-if="classInfo.comment.length"
       class="user-child__evaluations"
     >
       <UserChildEvaluation
-        v-for="rate in course.rates"
-        :key="rate.date"
-        :data="rate"
+        v-for="comment in classInfo.comment"
+        :key="comment.date"
+        :data="comment"
       />
     </div>
+
+    <DefaultContent v-else text="暂无评价"/>
   </div>
 </template>
 
@@ -36,18 +42,19 @@
  * @desc 个人中心 - 孩子信息
  */
 import { slide } from '@/directives';
-
+import defaultAvatar from '@/assets/avatar-default.svg';
 import {
+  DefaultContent,
   SwiperIndicator,
   ThePanel,
 } from '@/components';
-
 import { UserChildEvaluation } from './components';
 
 export default {
   name: 'UserChild',
 
   components: {
+    DefaultContent,
     SwiperIndicator,
     ThePanel,
     UserChildEvaluation,
@@ -58,53 +65,56 @@ export default {
   },
 
   data: () => ({
-    courseIndex: 0,
+    data: null,
 
-    data: {
-      avatar: 'http://img3.imgtn.bdimg.com/it/u=885192807,544676424&fm=27&gp=0.jpg',
-      name: '包着海苔的饭',
-      courses: [
-        {
-          name: '小学五年级奥数基础班',
-          rest: 3,
-          rates: Array(10).fill(
-            {
-              teacher: '肖冰洁',
-              date: '2017-12-24',
-              test: 'balabala...balabala.',
-            },
-          ),
-        },
-        {
-          name: '小学六年级英语基础班',
-          rest: 10,
-          rates: Array(10).fill(
-            {
-              teacher: '南山南',
-              date: '2017-12-24',
-              test: 'balabala...balabala.',
-            },
-          ),
-        },
-      ],
-    },
+    classIndex: 0,
   }),
 
   computed: {
-    course() {
-      return this.data.courses[this.courseIndex];
+    classInfo() {
+      return this.data.classes[this.indicatorIndex];
+    },
+
+    childAvatar() {
+      return (this.data && this.data.head_url) || defaultAvatar;
+    },
+
+    indicatorIndex() {
+      const id = Number(this.$route.params.classId);
+
+      return this.data.classes
+        .findIndex(item => item.id === id);
     },
   },
 
-  methods: {
-    slideCourse(step) {
-      const len = this.data.courses.length;
+  created() {
+    this.fetchChild();
+  },
 
-      const index = this.courseIndex + step;
+  methods: {
+    fetchChild(
+      studentId = this.$route.params.studentId,
+    ) {
+      const url = `/center/comment_all/${studentId}`;
+
+      this.$http.get(url)
+        .then((res) => { this.data = res; });
+    },
+
+    slideCourse(step) {
+      const len = this.data.classes.length;
+
+      const index = this.indicatorIndex + step;
 
       const valid = index >= 0 && index < len;
 
-      if (valid) this.courseIndex = index;
+      if (valid) {
+        const classId = this.data.classes[index].id;
+
+        this.$router.replace({
+          params: { classId },
+        });
+      }
     },
   },
 };
@@ -112,6 +122,20 @@ export default {
 
 <style lang="less">
 @gutter: 15px;
+
+.user-child {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .default-content {
+    flex-grow: 1;
+  }
+
+  .the-panel__description {
+    min-width: 0;
+  }
+}
 
 .user-child-evaluation:not(:last-child) {
   border-bottom: 1px solid @bd-color-base;

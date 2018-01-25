@@ -8,7 +8,7 @@
       v-for="course in data.classes"
       :key="course.product_id"
       :data="course"
-      @click.native="toCourseInfo(data.id, course.product_id)"
+      @click.native="toCourseInfo(data.id, course.id)"
     />
   </div>
 </template>
