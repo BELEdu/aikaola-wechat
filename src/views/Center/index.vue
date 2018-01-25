@@ -4,7 +4,7 @@
 
       <router-view></router-view>
 
-      <Tabbar slot="bottom">
+      <Tabbar slot="bottom" v-show="!mask">
         <TabbarItem
           v-for="item in navigation"
           :key="item.path"
@@ -19,7 +19,9 @@
         </TabbarItem>
       </Tabbar>
 
-      <BackTop v-if="false"></BackTop>
+      <BackTop v-if="false"/>
+
+      <AppMask/>
 
     </ViewBox>
   </div>
@@ -39,7 +41,7 @@ import {
 } from 'vux';
 
 import { mapState } from 'vuex';
-import { BackTop } from '@/components';
+import { BackTop, AppMask } from '@/components';
 import store from '@/store';
 
 export default {
@@ -50,36 +52,35 @@ export default {
     Tabbar,
     TabbarItem,
     BackTop,
+    AppMask,
   },
-
-  data: () => ({
-    navigation: [
-      {
-        svgId: 'course-table',
-        link: '/center/course/noid',
-        text: '课程表',
-      },
-      {
-        svgId: 'user',
-        link: '/center/user-info',
-        text: '个人中心',
-      },
-    ],
-  }),
 
   computed: {
     ...mapState({
       students: state => state.userInfo.students,
+      mask: state => state.mask,
     }),
 
+    // 默认选择第一个学员的id
     defaultStudentId() {
       return this.students[0].id;
     },
-  },
 
-  mounted() {
-    // 页面渲染后，去往课程表的链接重置为第一个绑定的学员id
-    this.navigation[0].link = `/center/course/${this.defaultStudentId}`;
+    // nav参数配置
+    navigation() {
+      return [
+        {
+          svgId: 'course-table',
+          link: `/center/course/${this.defaultStudentId}`,
+          text: '课程表',
+        },
+        {
+          svgId: 'user',
+          link: '/center/user-info',
+          text: '个人中心',
+        },
+      ];
+    },
   },
 
   beforeRouteEnter(to, from, next) {
