@@ -18,14 +18,37 @@
       hide-header
       highlight-weekend
       :replace-text-list="replaceTextList"
-      @on-change="onChange"
+      @on-select-single-date="onSelectSingleDate"
       @on-view-change="onViewChange"
-    />
+    >
+      <div
+        slot="each-day"
+        slot-scope="props"
+      >
+        <!-- 日期显示 -->
+        <span class="vux-calendar-each-date">
+          {{ props.child.isToday ? '今' : props.child.day }}
+        </span>
+
+        <!-- 如果该日期是有课的时候 -->
+        <div
+          class="calender__dots"
+          v-if="dateArray.includes(props.child.formatedDate)"
+        >
+          <i
+            v-for="(item,index) in courseFormat(props.child.formatedDate)"
+            :key="index"
+            class="dot"
+            :class="{[`${dotClassFormat(item.course_status)}`]:true}"
+          ></i>
+        </div>
+      </div>
+    </InlineCalendar>
 
     <!-- 四种状态 Tips -->
     <div class="calender__footer">
       <span
-        v-for="(status,index) in courseStatus"
+        v-for="(status,index) in course.status"
         :key="index"
       >
         <i class="dot" :class="status.class"></i>
@@ -51,8 +74,9 @@
 
     <!-- 课程详情轮播图 -->
     <CourseMask
+      v-if="mask"
+      :course="course"
       :studentId="studentId"
-      :visible.sync="mask.visible"
     ></CourseMask>
 
   </div>
@@ -62,6 +86,7 @@
 /**
  * @desc 课程表组件
  */
+
 import {
   dateFormat,
   InlineCalendar,
@@ -70,6 +95,8 @@ import {
   PopupHeader,
 } from 'vux';
 
+import { mapState } from 'vuex';
+import store from '@/store';
 import CourseMask from './CourseMask';
 
 export default {
@@ -92,16 +119,17 @@ export default {
 
   data() {
     return {
-      // 当月课程数据
-      courseData: [],
+      arr: [],
 
-      // 课程状态数据
-      courseStatus: [
-        { class: 'dot--error', name: '缺勤' },
-        { class: 'dot--warning', name: '已评价', course_status: 3 },
-        { class: 'dot--primary', name: '已上课', course_status: 2 },
-        { class: 'dot--default', name: '待上课', course_status: 1 },
-      ],
+      course: {
+        data: [], // 当月课程数据
+        status: [ // 课程状态数据
+          { class: 'dot--error', name: '缺勤' },
+          { class: 'dot--warning', name: '已评价', course_status: 3 },
+          { class: 'dot--primary', name: '已上课', course_status: 2 },
+          { class: 'dot--default', name: '待上课', course_status: 1 },
+        ],
+      },
 
       date: {
         value: '', // 当前选中的日期
@@ -116,16 +144,16 @@ export default {
         active: false, // 月份选择器控制
       },
 
-      mask: {
-        visible: false, // 遮罩层控制
-      },
-
       // 替换文本
       replaceTextList: { TODAY: '今' },
     };
   },
 
   computed: {
+    ...mapState({
+      mask: state => state.mask,
+    }),
+
     // 今天日期
     today() {
       return dateFormat(new Date(), 'YYYY-MM-DD');
@@ -136,8 +164,14 @@ export default {
       return `${this.date.year} 年 ${this.date.month} 月`;
     },
 
-    courseIdArray() {
-      return this.courseData.map(course => course.id) || [];
+    // 当前月份所有课程组成的数组
+    courseArray() {
+      return this.course.data.reduce((acc, course) => [...acc, ...course.data], []);
+    },
+
+    // 当前月份有课的日期组成的数组
+    dateArray() {
+      return this.course.data.map(item => item.date);
     },
   },
 
@@ -182,7 +216,7 @@ export default {
       .then((res) => {
         // eslint-disable-next-line
         console.log(res);
-        this.courseData = res;
+        this.course.data = res;
       });
     },
 
@@ -202,12 +236,40 @@ export default {
       this.$refs.datetime.render();
     },
 
-    onChange(val) {
+    // 用户选择某一个日期时
+    onSelectSingleDate(val) {
       // eslint-disable-next-line
       console.log(val);
-      this.mask.visible = true;
+      const show = this.dateArray.find(date => val === date);
+      if (show) {
+        store.commit('updateMask', true);
+      }
     },
 
+    // 根据日期查出那天的课程
+    courseFormat(date) {
+      return this.course.data
+        .find(item => item.date === date).data
+        .map(item => ({
+          course_status: item.course_status,
+          is_attend: item.is_attend,
+        }))
+      ;
+    },
+
+    // 小圆点状态判断
+    dotClassFormat(status) {
+      switch (status) {
+        case 1:
+          return 'dot--default';
+        case 2:
+          return 'dot--primary';
+        case 3:
+          return 'dot--warning';
+        default:
+          return 'dot--error';
+      }
+    },
   },
 
   created() {
@@ -220,8 +282,10 @@ export default {
 .dot {
   height: 8px;
   width: 8px;
+  margin: 0 1px;
   background-color: #000;
   border-radius: 50%;
+  display: inline-block;
 
   &--error {
     background-color: @error-color;
@@ -232,17 +296,25 @@ export default {
   }
 
   &--primary {
-    background-color: @primary-color;
+    background-color: @success-color;
   }
 
   &--default {
-    background-color: @text-color-secondary;
+    background-color: @primary-color;
   }
 }
 
 .calender {
   background-color: #fff;
   margin-bottom: 10px;
+
+  &__dots {
+    position: absolute;
+    line-height: 1;
+    width: 100%;
+    text-align: center;
+    bottom: 4px;
+  }
 
   .inline-calendar {
 
@@ -253,6 +325,7 @@ export default {
     }
 
     & td {
+      position: relative;
       width: 50px;
       height: 50px;
       font-size: 14px;
@@ -274,21 +347,21 @@ export default {
       }
 
       &.current {
-        & > span.vux-calendar-each-date {
+        & span.vux-calendar-each-date {
           background-color: #F0F8FE;
           color: @text-color-secondary !important;
         }
 
-        &.is-week-0 > span.vux-calendar-each-date , &.is-week-6 > span.vux-calendar-each-date{
+        &.is-week-0 span.vux-calendar-each-date , &.is-week-6 > span.vux-calendar-each-date{
           color: @warning-color !important;
         }
 
-        &.is-today > span.vux-calendar-each-date {
+        &.is-today span.vux-calendar-each-date {
           color: @primary-color !important;
         }
       }
 
-      & > span.vux-calendar-each-date {
+      & span.vux-calendar-each-date {
         position: relative;
         display: inline-block;
         width: 100%;
@@ -338,7 +411,7 @@ export default {
       margin-left: 15px;
 
       i {
-        margin-right: 5px;
+        margin-right: 4px;
       }
     }
   }
