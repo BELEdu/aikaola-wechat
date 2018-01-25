@@ -1,6 +1,7 @@
 // 依赖
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from '@/store';
 
 // 路由组件
 import * as views from '@/views';
@@ -51,6 +52,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  store.commit('updateMask', false);
   if (to.meta.title) {
     document.title = to.meta.title;
   } else {

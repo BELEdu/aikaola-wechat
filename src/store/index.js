@@ -7,12 +7,17 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     userInfo: null,
+    mask: false,
   },
 
   mutations: {
     initUser(state, userInfo) {
       // eslint-disable-next-line
       state.userInfo = userInfo;
+    },
+    updateMask(state, value) {
+      // eslint-disable-next-line
+      state.mask = value;
     },
   },
 
