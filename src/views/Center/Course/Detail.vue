@@ -1,22 +1,25 @@
 <template>
-  <div class="course-detail">
-
+  <div
+    class="course-detail"
+    v-if="course"
+    v-acme
+  >
     <!-- 课程和教师信息 -->
     <div class="course-detail__meta">
       <Divider>
-        <b>数学速算与巧算</b>
-        <div class="course-detail__meta__small">教师：肖冰洁</div>
+        <h3>第 {{course.sort_value}} 节课</h3>
+        <h5 a>教师：{{course.teacher_name}}</h5>
       </Divider>
     </div>
 
     <div class="course-detail__action">
       <!-- 上传作业 -->
       <a
-        :class="{'course-detail__action__disabled':!uploadActive}"
-        @click="goToUpload"
+        :class="{'course-detail__action__disabled':!paperActive}"
+        @click="paperPopup"
       >
         <div class="course-detail__action__svg">
-          <badge></badge>
+          <badge v-if="pptActive"></badge>
           <svg><use :xlink:href="uploadSvgId" /></svg>
         </div>
         <span>上传作业</span>
@@ -28,7 +31,7 @@
         @click="pptPopup"
       >
         <div class="course-detail__action__svg">
-          <badge></badge>
+          <badge v-if="pptActive"></badge>
           <svg><use :xlink:href="pptSvgId" /></svg>
         </div>
         <span>课件预览</span>
@@ -36,7 +39,10 @@
     </div>
 
     <!-- 教学评价 -->
-    <div class="course-detail__comment">
+    <div
+      class="course-detail__comment"
+      v-if="course.comment !== ''"
+    >
       <div class="course-detail__comment__wrap">
         <h5>评价内容</h5>
         <svg class="course-detail__comment__svg-left">
@@ -45,25 +51,26 @@
         <svg class="course-detail__comment__svg-right">
           <use xlink:href="#quotation-mark-right" />>
         </svg>
-        <p>李园园上课能认真听讲，积极回答老师问题，对知识点吸收能力很强；李园园上课会有一些小动作，我们会在教学期间积极引导她做好改善。</p>
+        <p>{{course.comment}}</p>
       </div>
     </div>
 
+    <!-- 课程内容区域 -->
+    <div class="course-detail__content">
+      <h3>授课内容：</h3>
+      <section v-html="course.chapter_name"></section>
+    </div>
+
     <!-- 教案区域 -->
-    <section class="course-detail__section">
-      <div v-for="i in 4" :key="i">
-        <p>教学目标：</p>
-        <p>1.使学生初步理解速算与巧算的技巧</p>
-        <p>2.简单运用凑整的方法进行运算</p>
-        <p>3.培养学生的观察能力、以及学生的变通能力</p>
-        <p>重点：凑整的思想</p>
-        <p>难点：理解凑整中的补数的运用</p>
-      </div>
-    </section>
+    <section
+      v-if="course.scheme_content !== ''"
+      class="course-detail__section"
+      v-html="course.scheme_content"
+    ></section>
 
     <!-- 课件预览弹出菜单 -->
     <Popup
-      v-model="active"
+      v-model="ppt.active"
       class="course-detail__popup"
     >
       <PopupHeader
@@ -72,11 +79,31 @@
       />
       <Group gutter="0">
         <cell
-          v-for="( item,index ) in pptList"
+          v-for="( ppt,index ) in ppt.data"
           :key="index"
-          :title="item.display_name"
+          :title="ppt.display_name"
           is-link
-          @click.native="pptPreview(item.url)"
+          @click.native="pptPreview(ppt.url)"
+        ></cell>
+      </Group>
+    </Popup>
+
+    <!-- 上传作业弹出菜单 -->
+    <Popup
+      v-model="paper.active"
+      class="course-detail__popup"
+    >
+      <PopupHeader
+        :show-bottom-border="false"
+        title="请选择课后作业"
+      />
+      <Group gutter="0">
+        <cell
+          v-for="( paper,index ) in paper.data"
+          :key="index"
+          :title="paper.test_paper_name"
+          is-link
+          @click.native="paperUpload(paper.id)"
         ></cell>
       </Group>
     </Popup>
@@ -88,6 +115,7 @@
 /**
  * @desc 课程详情
  */
+
 import {
   Divider,
   Popup,
@@ -97,8 +125,12 @@ import {
   Badge,
 } from 'vux';
 
+import { formUtils, loadingTool } from '@/mixins';
+
 export default {
   name: 'CourseDetail',
+
+  mixins: [formUtils, loadingTool],
 
   components: {
     Divider,
@@ -111,44 +143,51 @@ export default {
 
   data() {
     return {
-      active: false,
+      course: null, // 课程数据
 
-      pptList: [
-        {
-          display_name: '《如何和孩子有效沟通》1116-涂老师2',
-          url: 'http://oa-statics.caihonggou.com/data/ppts/5a28ed32786f0/index.html',
-        },
-        {
-          display_name: '一年级奥数移多补少1',
-          url: 'http://oa-statics.caihonggou.com/data/ppts/5a28ed32786f0/index.html',
-        },
-        {
-          display_name: '四年级奥数拓展课程奇思巧解',
-          url: 'http://oa-statics.caihonggou.com/data/ppts/5a28ed32786f0/index.html',
-        },
-      ],
+      // 课件参数
+      ppt: {
+        data: [],
+        active: false,
+      },
+
+      // 试卷参数
+      paper: {
+        data: [],
+        active: false,
+      },
     };
   },
 
   computed: {
+    // 学生id
+    studentId() {
+      return +this.$route.params.studentId;
+    },
+
+    // 课程id
+    courseId() {
+      return +this.$route.params.courseId;
+    },
+
     // 当前路由地址
     currenRoutetPath() {
       return this.$route.path;
     },
 
     // 是否可以上传作业
-    uploadActive() {
-      return true;
+    paperActive() {
+      return this.paper.data.length > 0;
     },
 
     // 是否有ppt可以预览
     pptActive() {
-      return true;
+      return this.ppt.data.length > 0;
     },
 
     // 上传作业的SVG图标id
     uploadSvgId() {
-      return `#${this.uploadActive ? 'upload-homework-active' : 'upload-homework-disabled'}`;
+      return `#${this.paperActive ? 'upload-homework-active' : 'upload-homework-disabled'}`;
     },
 
     // 上传作业的SVG图标id
@@ -163,22 +202,64 @@ export default {
       location.href = url;
     },
 
+    // 前往上传作业
+    paperUpload(paperId) {
+      this.$router.push(`${this.currenRoutetPath}/${paperId}`);
+    },
+
     // 预览ppt选择菜单
     pptPopup() {
       if (this.pptActive) {
-        this.active = true;
+        this.ppt.active = true;
       } else {
         this.$vux.toast.text('该课程暂无PPT课件');
       }
     },
 
-    goToUpload() {
-      if (this.uploadActive) {
-        this.$router.push(`${this.currenRoutetPath}/homework`);
+    // 上传课件选择菜单
+    paperPopup() {
+      if (this.paperActive) {
+        this.paper.active = true;
       } else {
         this.$vux.toast.text('该课程暂无课后作业');
       }
     },
+
+    // 获取课程数据
+    getCourselData() {
+      this.$http.get(`/course/detail/${this.studentId}/${this.courseId}`)
+        .then((res) => {
+          this.course = res;
+        })
+        .catch(this.alertError)
+        .then(() => {
+          this.hideLoading();
+        });
+    },
+
+    // 获取课件数据
+    getpptData() {
+      this.$http.get(`/course/attachment/${this.courseId}`)
+        .then((res) => {
+          this.ppt.data = res;
+        })
+        .catch(this.alertError);
+    },
+
+    // 获取测试数据
+    getPaperData() {
+      this.$http.get(`/course/paper/${this.studentId}/${this.courseId}`)
+        .then((res) => {
+          this.paper.data = res;
+        })
+        .catch(this.alertError);
+    },
+  },
+
+  created() {
+    this.getCourselData();
+    this.getpptData();
+    this.getPaperData();
   },
 };
 </script>
@@ -216,17 +297,19 @@ export default {
 .course-detail {
 
   &__meta {
-    padding: 10px;
+    padding: 6px 10px;
+    line-height: 1;
 
-    b {
+    h3 {
       font-size: 15px;
       color: @text-color-default;
     }
 
-    &__small {
+    h5 {
       margin-top: 8px;
       color: @text-color-secondary;
       font-size: 13px;
+      font-weight: normal;
     }
   }
 
@@ -361,10 +444,24 @@ export default {
     }
   }
 
+  &__content {
+    .content-margin();
+    padding: 10px;
+    font-size: 14px;
+    background-color: #fff;
+
+    h3 {
+      font-size: 15px;
+      color: @text-color-default;
+    }
+  }
+
   &__section {
     .content-margin();
     padding: 20px 10px;
-    background-color: #fff
+    background-color: #fff;
+    font-size: 14px;
+    overflow-x: scroll;
   }
 
   &__popup {
