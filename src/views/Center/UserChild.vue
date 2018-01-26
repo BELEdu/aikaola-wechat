@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="data"
+    v-acma
     class="user-child"
   >
     <ThePanel
@@ -124,7 +125,6 @@ export default {
 @gutter: 15px;
 
 .user-child {
-  height: 100%;
   display: flex;
   flex-direction: column;
 
