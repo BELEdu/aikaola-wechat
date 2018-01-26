@@ -35,7 +35,7 @@ export default {
         [
           { transform: 'translate(0)' },
           { transform: scrollTop },
-        ], 200);
+        ], 500);
 
       animation.onfinish = () => {
         container.scrollTop = 0;
