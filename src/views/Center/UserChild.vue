@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="data"
-    v-acma
+    v-acme
     class="user-child"
   >
     <ThePanel
