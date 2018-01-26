@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import 'intersection-observer';
+import 'web-animations-js';
 import { TheTopReturn } from '@/components';
 
 const Component = Vue.extend(TheTopReturn);
