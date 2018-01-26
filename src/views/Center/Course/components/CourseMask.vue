@@ -17,17 +17,17 @@
       >
         <section
           class="mask__wrap"
-          :class="{[`${theme(course.course_status)}`]:true}"
+          :class="{[`${theme(course.course_status,course.is_attend)}`]:true}"
         >
           <!-- 标签 -->
-          <div class="mask__tag">{{course.course_status_name}}</div>
+          <div class="mask__tag">{{course.is_attend === 0 ?'缺勤':course.course_status_name}}</div>
 
           <!-- 课序 -->
           <div class="mask__index">第 {{course.sort_value}} 节课</div>
 
           <!-- 图标 -->
           <div class="text-center">
-            <svg><use :xlink:href="`#${svgId(course.course_status)}`"/></svg>
+            <svg class="mask__wrap__svg"><use :xlink:href="`#${svgId(course.course_status,course.is_attend)}`"/></svg>
           </div>
 
           <!-- 课程信息 -->
@@ -57,8 +57,11 @@
           <router-link
             v-if="showMore(course.course_status)"
             class="mask__more"
-            :to="`/center/course/${studentId}/10086`"
-          >查看更多</router-link>
+            :to="`/center/course/${studentId}/${course.id}`"
+          >
+            查看更多
+            <svg><use xlink:href="#arrows-right"/></svg>
+          </router-link>
 
         </section>
       </swiper-slide>
@@ -90,6 +93,9 @@ export default {
       type: Object,
       required: true,
     },
+    date: {
+      type: String,
+    },
   },
 
   data() {
@@ -115,11 +121,9 @@ export default {
   computed: {
     // 当前月份所有课程组成的数组
     courseArray() {
-      return this.course.data.reduce((acc, course) => [...acc, ...course.data], []) || [];
+      return this.course.data
+        .reduce((acc, course) => [...acc, ...course.data], []) || [];
     },
-  },
-
-  mounted() {
   },
 
   methods: {
@@ -143,7 +147,11 @@ export default {
     },
 
     // 图标id
-    svgId(status) {
+    svgId(status, isAttend) {
+      // 如果该学员是缺勤，则一律返回error样式
+      if (isAttend === 0) {
+        return 'course-error';
+      }
       switch (status) {
         case 1:
           return 'course-wait';
@@ -157,7 +165,10 @@ export default {
     },
 
     // 卡片主题
-    theme(status) {
+    theme(status, isAttend) {
+      if (isAttend === 0) {
+        return 'is-error';
+      }
       switch (status) {
         case 1:
           return 'is-primary';
@@ -228,7 +239,7 @@ export default {
     border-radius: 5px;
     overflow: hidden;
 
-    & svg {
+    &__svg {
       height: @svg-width;
       width: @svg-width;
       margin-top: 25px;
@@ -278,19 +289,24 @@ export default {
   &__more {
     position: absolute;
     line-height: 1;
-    color: @primary-color;
+    color: @text-color-subsidiary;
     bottom: 20px;
-    text-align: center;
-    font-size: 13px;
+    font-size: 15px;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      margin-left: 2px;
+      height: 12px;
+      width: 12px;
+      fill: @text-color-subsidiary;
+    }
   }
 }
 
 .mySwiper {
-  // position: relative;
-  // width: 100%;
-  // background-color: red;
-
   .swiper-slide {
     width: @item-width;
   }
