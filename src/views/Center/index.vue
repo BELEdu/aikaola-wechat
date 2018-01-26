@@ -19,8 +19,6 @@
         </TabbarItem>
       </Tabbar>
 
-      <BackTop v-if="false"/>
-
       <AppMask/>
 
     </ViewBox>
@@ -41,7 +39,7 @@ import {
 } from 'vux';
 
 import { mapState } from 'vuex';
-import { BackTop, AppMask } from '@/components';
+import { AppMask } from '@/components';
 import store from '@/store';
 
 export default {
@@ -51,7 +49,6 @@ export default {
     ViewBox,
     Tabbar,
     TabbarItem,
-    BackTop,
     AppMask,
   },
 
