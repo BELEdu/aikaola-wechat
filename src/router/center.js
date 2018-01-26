@@ -51,7 +51,7 @@ export default {
     },
 
     {
-      path: '/center/course/:studentId/:couresId',
+      path: '/center/course/:studentId/:courseId',
       name: 'CenterCourseDetail',
       component: views.CenterCourseDetail,
       meta: {
@@ -60,7 +60,7 @@ export default {
     },
 
     {
-      path: '/center/course/:studentId/:couresId/homework',
+      path: '/center/course/:studentId/:courseId/:testId',
       name: 'CenterCourseHomework',
       component: views.CenterCourseHomework,
       meta: {
