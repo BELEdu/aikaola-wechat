@@ -39,7 +39,7 @@
             v-for="(item,index) in courseFormat(props.child.formatedDate)"
             :key="index"
             class="dot"
-            :class="{[`${dotClassFormat(item.course_status)}`]:true}"
+            :class="{[`${dotClassFormat(item.course_status,item.is_attend)}`]:true}"
           ></i>
         </div>
       </div>
@@ -76,7 +76,8 @@
     <CourseMask
       v-if="mask"
       :course="course"
-      :studentId="studentId"
+      :student-id="studentId"
+      :date="date.value"
     ></CourseMask>
 
   </div>
@@ -96,18 +97,15 @@ import {
 } from 'vux';
 
 import { mapState } from 'vuex';
+import { formUtils, loadingTool } from '@/mixins';
 import store from '@/store';
 import CourseMask from './CourseMask';
+
 
 export default {
   name: 'course-calender',
 
-  props: {
-    studentId: {
-      type: Number,
-      required: true,
-    },
-  },
+  mixins: [formUtils, loadingTool],
 
   components: {
     InlineCalendar,
@@ -117,9 +115,15 @@ export default {
     CourseMask,
   },
 
+  props: {
+    studentId: {
+      type: Number,
+      required: true,
+    },
+  },
+
   data() {
     return {
-      arr: [],
 
       course: {
         data: [], // 当月课程数据
@@ -211,13 +215,22 @@ export default {
 
     // 获取课程信息
     getCourseData(firstDate, lastDate) {
+      // 拼接接口地址
       const api = `/course/class_schedule/${this.studentId}?between[course_date][]=${firstDate}&between[course_date][]=${lastDate}`;
+
+      // 显示loading
+      this.showLoading();
+
       this.$http.get(api)
-      .then((res) => {
-        // eslint-disable-next-line
-        console.log(res);
-        this.course.data = res;
-      });
+        .then((res) => {
+          // eslint-disable-next-line
+          console.log(res);
+          this.course.data = res;
+        })
+        .catch(this.alertError)
+        .then(() => {
+          this.hideLoading();
+        });
     },
 
     // 弹窗控制
@@ -258,7 +271,10 @@ export default {
     },
 
     // 小圆点状态判断
-    dotClassFormat(status) {
+    dotClassFormat(status, isAttend) {
+      if (isAttend === 0) {
+        return 'dot--error';
+      }
       switch (status) {
         case 1:
           return 'dot--default';
@@ -306,7 +322,6 @@ export default {
 
 .calender {
   background-color: #fff;
-  margin-bottom: 10px;
 
   &__dots {
     position: absolute;
@@ -339,7 +354,7 @@ export default {
       }
 
       &.is-week-0 , &.is-week-6 {
-        color: @warning-color;
+        color: @text-color-secondary ;
       }
 
       &.is-disabled {
@@ -349,11 +364,11 @@ export default {
       &.current {
         & span.vux-calendar-each-date {
           background-color: #F0F8FE;
-          color: @text-color-secondary !important;
+          color: @text-color-default !important;
         }
 
         &.is-week-0 span.vux-calendar-each-date , &.is-week-6 > span.vux-calendar-each-date{
-          color: @warning-color !important;
+          color: @text-color-default !important;
         }
 
         &.is-today span.vux-calendar-each-date {
