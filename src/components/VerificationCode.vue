@@ -81,7 +81,7 @@ export default {
 
     showCounter: false,
 
-    counter: 10,
+    counter: 60,
   }),
 
   methods: {
