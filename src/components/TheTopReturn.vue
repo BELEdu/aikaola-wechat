@@ -26,20 +26,27 @@ export default {
   }),
 
   methods: {
-    returnTop() {
-      const container = this.el.parentElement;
+    returnTop({
+      container = this.el.parentElement,
+      distance = container.scrollTop,
+      // 滚动次数
+      frequrence = 300 / (1000 / 60),
+      // 每帧自然滚动距离
+      delta = distance / frequrence,
+    } = {}) {
+      const position = distance > delta ? distance - delta : 0;
 
-      const scrollTop = `translate(0, ${container.scrollTop}px)`;
+      // eslint-disable-next-line
+      container.scrollTop = position;
 
-      const animation = this.el.animate(
-        [
-          { transform: 'translate(0)' },
-          { transform: scrollTop },
-        ], 500);
-
-      animation.onfinish = () => {
-        container.scrollTop = 0;
-      };
+      if (position) {
+        requestAnimationFrame(
+          () => this.returnTop({
+            distance: position,
+            frequrence: frequrence - 1,
+          }),
+        );
+      }
     },
 
     show(target) {
