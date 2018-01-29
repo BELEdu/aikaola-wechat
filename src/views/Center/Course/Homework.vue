@@ -52,7 +52,7 @@
       :options="options"
       ref="previewer"
       @on-close="onClose"
-      @getCurrentIndex="getCurrentIndex"
+      @get-current-index="getCurrentIndex"
     >
       <div
         slot="button-before"
@@ -120,13 +120,14 @@ export default {
         }));
     },
 
+    // 转换为preview组件需要的格式
     previewData() {
       return this.submitData.map(img => ({
         src: img.url,
       }));
     },
 
-    ss() {
+    myPreviewer() {
       return this.$refs.previewer;
     },
   },
@@ -175,6 +176,10 @@ export default {
     // 图片预览组件关闭时触发
     onClose() {
       store.commit('updateMask', false);
+    },
+
+    getCurrentIndex(index) {
+      console.log(index);
     },
 
     // 获取上次上传的作业信息
