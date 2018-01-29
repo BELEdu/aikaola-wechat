@@ -52,7 +52,6 @@
       :options="options"
       ref="previewer"
       @on-close="onClose"
-      @get-current-index="getCurrentIndex"
     >
       <div
         slot="button-before"
@@ -176,10 +175,6 @@ export default {
     // 图片预览组件关闭时触发
     onClose() {
       store.commit('updateMask', false);
-    },
-
-    getCurrentIndex(index) {
-      console.log(index);
     },
 
     // 获取上次上传的作业信息
