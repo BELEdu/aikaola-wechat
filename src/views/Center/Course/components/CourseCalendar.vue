@@ -223,8 +223,6 @@ export default {
 
       this.$http.get(api)
         .then((res) => {
-          // eslint-disable-next-line
-          console.log(res);
           this.course.data = res;
         })
         .catch(this.alertError)
