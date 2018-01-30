@@ -55,6 +55,7 @@ export default {
     float: right;
     margin-left: calc(@ellipsis-width * -1);
     width: 100%;
+    text-align: justify;
   }
 
   .clamp-placeholder {

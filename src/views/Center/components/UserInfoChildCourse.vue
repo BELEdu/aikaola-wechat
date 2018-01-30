@@ -65,6 +65,7 @@ export default {
 
   span:last-of-type {
     flex-grow: 1;
+    text-align: justify;
   }
 }
 
