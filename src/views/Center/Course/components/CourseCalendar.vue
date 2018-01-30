@@ -75,6 +75,7 @@
     <!-- 课程详情轮播图 -->
     <CourseMask
       v-if="mask && date.value"
+      :key="date.value"
       :course="course"
       :student-id="studentId"
       :current-date="date.value"
