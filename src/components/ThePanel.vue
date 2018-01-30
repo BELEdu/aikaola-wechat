@@ -79,7 +79,7 @@ export default {
   flex-direction: column;
   justify-content: space-around;
   line-height: 1;
-  color: @text-color-subsidiary;
+  color: @text-color-secondary;
   font-size: @text-size-content;
 
   span:first-of-type {
