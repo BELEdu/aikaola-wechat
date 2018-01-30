@@ -1,5 +1,5 @@
 // vux组件引入
-import { ToastPlugin, LoadingPlugin } from 'vux';
+import { ToastPlugin, LoadingPlugin, ConfirmPlugin } from 'vux';
 
 // 全局样式
 import '@/styles/global.less';
@@ -29,7 +29,8 @@ Object.keys(directives).forEach((key) => {
 
 Vue.use(plugins)
   .use(ToastPlugin)
-  .use(LoadingPlugin);
+  .use(LoadingPlugin)
+  .use(ConfirmPlugin);
 
 /* eslint-disable no-new */
 new Vue({
