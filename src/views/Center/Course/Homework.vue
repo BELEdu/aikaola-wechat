@@ -308,7 +308,7 @@ export default {
       margin-left: -30%;
       width: 60%;
       height: 60%;
-      fill: @upload-border;
+      fill: @text-color-subsidiary;
       transition: all 0.2s;
     }
 
@@ -316,16 +316,16 @@ export default {
       position: absolute;
       width: calc(~"100% - 2px");
       height: calc(~"100% - 2px");
-      border:1px dashed @upload-border;
+      border:1px dashed @text-color-subsidiary;
       transition: all 0.2s;
     }
 
     &:active {
       & svg {
-        fill: @text-color-subsidiary;
+        fill: @text-color-secondary;
       }
       & label {
-        border:1px dashed @text-color-subsidiary;
+        border:1px dashed @text-color-secondary;
       }
     }
   }
