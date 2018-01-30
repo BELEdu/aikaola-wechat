@@ -93,8 +93,9 @@ export default {
       type: Object,
       required: true,
     },
-    date: {
+    currentDate: {
       type: String,
+      required: true,
     },
   },
 
@@ -119,6 +120,9 @@ export default {
   },
 
   computed: {
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    },
     // 当前月份所有课程组成的数组
     courseArray() {
       return this.course.data
@@ -126,7 +130,18 @@ export default {
     },
   },
 
+  mounted() {
+    this.slideToFirstCourse();
+  },
+
   methods: {
+    // 滚动到当前日期的第一节课
+    slideToFirstCourse() {
+      const slideIndex = this.courseArray
+       .findIndex(course => course.date === this.currentDate);
+      this.swiper.slideTo(slideIndex, 500, false);
+    },
+
     // 关闭弹窗
     closeMask() {
       store.commit('updateMask', false);

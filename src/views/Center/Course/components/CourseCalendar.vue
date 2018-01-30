@@ -74,10 +74,10 @@
 
     <!-- 课程详情轮播图 -->
     <CourseMask
-      v-if="mask"
+      v-if="mask && date.value"
       :course="course"
       :student-id="studentId"
-      :date="date.value"
+      :current-date="date.value"
     ></CourseMask>
 
   </div>
