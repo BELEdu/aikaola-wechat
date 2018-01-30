@@ -1,6 +1,9 @@
 <template>
   <div class="right-arrow user-info__child__content">
-    <div>课程名称：{{data.product_name}}</div>
+    <div class="user-info__child__content-name">
+      <span>课程名称：</span>
+      <span>{{data.product_name}}</span>
+    </div>
     <div>剩余课时：{{data.remain_total}}课时</div>
     <div
       v-if="data.new_comment"
@@ -51,6 +54,18 @@ export default {
   padding-left: 0;
   font-size: @text-size-content;
   color: @text-color-secondary;
+}
+
+.user-info__child__content-name {
+  display: flex;
+
+  span:first-of-type {
+    flex-shrink: 0;
+  }
+
+  span:last-of-type {
+    flex-grow: 1;
+  }
 }
 
 .user-info__child__content-rate {
