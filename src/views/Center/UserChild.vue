@@ -44,6 +44,7 @@
  */
 import { slide } from '@/directives';
 import defaultAvatar from '@/assets/avatar-default.svg';
+import { loadingTool } from '@/mixins';
 import {
   DefaultContent,
   SwiperIndicator,
@@ -60,6 +61,8 @@ export default {
     ThePanel,
     UserChildEvaluation,
   },
+
+  mixins: [loadingTool],
 
   directives: {
     slide,
@@ -99,7 +102,8 @@ export default {
       const url = `/center/comment_all/${studentId}`;
 
       this.$http.get(url)
-        .then((res) => { this.data = res; });
+        .then((res) => { this.data = res; })
+        .then(this.hideLoading);
     },
 
     slideCourse(step) {
