@@ -290,7 +290,7 @@ export default {
     list-style: none;
 
     & > li {
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1.5;
       margin-bottom: 12px;
       display: flex;
@@ -304,7 +304,7 @@ export default {
   &__more {
     position: absolute;
     line-height: 1;
-    color: @text-color-subsidiary;
+    color: @text-color-secondary;
     bottom: 20px;
     font-size: 15px;
     width: 100%;
@@ -316,7 +316,14 @@ export default {
       margin-left: 2px;
       height: 12px;
       width: 12px;
-      fill: @text-color-subsidiary;
+      fill: @text-color-secondary;
+    }
+
+    &:active {
+      color: @text-color-default;
+      svg {
+        fill: @text-color-default;
+      }
     }
   }
 }

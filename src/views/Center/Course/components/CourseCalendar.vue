@@ -165,7 +165,7 @@ export default {
 
     // 当前日历的渲染年月
     calendarYearMonth() {
-      return `${this.date.year} 年 ${this.date.month} 月`;
+      return `${this.date.year}年${this.date.month}月`;
     },
 
     // 当前月份所有课程组成的数组
@@ -390,7 +390,7 @@ export default {
   }
 
   &__header {
-    padding: 15px;
+    padding: 15px 20px;
     line-height: 1;
     display: flex;
     justify-content: flex-end;
