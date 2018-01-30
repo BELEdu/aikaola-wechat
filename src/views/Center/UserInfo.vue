@@ -14,7 +14,7 @@
       <span
         @click="$router.push('/child-binding')"
       >
-        <svg><use xlink:href="#plus"/></svg>添加小孩
+        <svg><use xlink:href="#plus-child"/></svg>添加小孩
       </span>
     </div>
 
@@ -77,8 +77,8 @@ export default {
     align-items: center;
 
     svg {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       margin-right: 5px;
       fill: @primary-color;
     }
