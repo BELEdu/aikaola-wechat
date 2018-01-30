@@ -19,7 +19,8 @@
         @click="paperPopup"
       >
         <div class="course-detail__action__svg">
-          <badge v-if="pptActive"></badge>
+          <!-- 小圆点 -->
+          <!-- <badge v-if="pptActive"></badge> -->
           <svg><use :xlink:href="uploadSvgId" /></svg>
         </div>
         <span>上传作业</span>
@@ -31,7 +32,8 @@
         @click="pptPopup"
       >
         <div class="course-detail__action__svg">
-          <badge v-if="pptActive"></badge>
+          <!-- 小圆点 -->
+          <!-- <badge v-if="pptActive"></badge> -->
           <svg><use :xlink:href="pptSvgId" /></svg>
         </div>
         <span>课件预览</span>

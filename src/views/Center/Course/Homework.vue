@@ -2,17 +2,26 @@
   <div class="homework">
 
     <ul class="homework__wrap clearfix">
-      <!-- 图片列表 -->
-      <li v-for="(img,index) in list" :key="index">
-        <div class="homework__item" @click="openImg(index,img.url)">
-          <!-- 图片 -->
-          <img v-img-src="img.url || img.preview">
-          <!-- 提示信息遮罩层 -->
-          <div class="homework__item__mask" v-if="!img.url">
-            {{img.text}}
-          </div>
-        </div>
-      </li>
+
+      <!-- 拖拽上传插件 -->
+      <Draggable v-model="list">
+        <transition-group>
+          <!-- 图片列表 -->
+          <li v-for="(img,index) in list" :key="index">
+            <div class="homework__item" @click="openPreviewImg(index,img.url)">
+              <!-- 图片 -->
+              <img
+                v-img-src="img.url || img.preview"
+                class="my-previewer-img"
+              >
+              <!-- 提示信息遮罩层 -->
+              <div class="homework__item__mask" v-if="!img.url">
+                {{img.text}}
+              </div>
+            </div>
+          </li>
+        </transition-group>
+      </Draggable>
 
       <!-- 上传按钮 -->
       <li>
@@ -47,15 +56,17 @@
 
     <!-- 图片预览组件 -->
     <Previewer
+      v-if="previewData.length>0"
       class="homework__preview"
       :list="previewData"
-      :options="options"
+      :options="previewOptions"
       ref="previewer"
-      @on-close="onClose"
+      @on-close="onPreviewClose"
     >
       <div
         slot="button-before"
-        class="homework__preview__action"
+        class="homework__preview__delete"
+        @click="deletePreviewImg"
       >
         <svg><use xlink:href="#trash" /></svg>
       </div>
@@ -68,6 +79,7 @@
 
 import { mapState } from 'vuex';
 import { XButton, Previewer } from 'vux';
+import Draggable from 'vuedraggable';
 
 import { formUtils, loadingTool } from '@/mixins';
 import store from '@/store';
@@ -83,19 +95,32 @@ export default {
     XButton,
     Upload,
     Previewer,
+    Draggable,
   },
 
   data() {
     return {
-      lastUrl: '/', // 上一个路由地址
-
       list: [], // 图片列表
 
       tips: false, // 图片格式是否正确小贴士
 
       loading: false, // 提交按钮loading
 
-      options: {},
+      // 图片预览插件的配置
+      previewOptions: {
+        // 处理图片弹出效果的方法
+        getThumbBoundsFn(index) {
+          // 找到缩略图的元素
+          const thumbnail = document.querySelectorAll('.my-previewer-img')[index];
+          // 获取 window scroll Y
+          const pageYScroll = window.pageYOffset || document.documentElement.scrollTop;
+          // 可选得到水平滚动
+          // 获取元素在视图中相对于相对定位的绝对定位
+          const rect = thumbnail.getBoundingClientRect();
+          // w = width
+          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width };
+        },
+      },
     };
   },
 
@@ -126,12 +151,44 @@ export default {
       }));
     },
 
-    myPreviewer() {
-      return this.$refs.previewer;
+    // 返回的地址
+    backUrl() {
+      return `/center/course/${this.$route.params.studentId}/${this.$route.params.courseId}`;
     },
   },
 
   methods: {
+    // 图片预览
+    openPreviewImg(index, url) {
+      if (url) {
+        store.commit('updateMask', true);
+        this.$refs.previewer.show(index);
+      }
+    },
+
+    // 删除预览的图片
+    deletePreviewImg() {
+      const previewIndex = this.$refs.previewer.getCurrentIndex();
+      // eslint-disable-next-line
+      const _this = this;
+      this.$vux.confirm.show({
+        title: '提示',
+        content: '是否删除该图片？',
+        onConfirm() {
+          _this.list.splice(previewIndex, 1);
+          if (_this.list.length === 0) {
+            store.commit('updateMask', false);
+          }
+          _this.$vux.toast.text('删除成功');
+        },
+      });
+    },
+
+    // 图片预览组件关闭时触发
+    onPreviewClose() {
+      store.commit('updateMask', false);
+    },
+
     // 更新小贴士信息
     updateTips(val) {
       this.tips = val;
@@ -154,7 +211,7 @@ export default {
       });
     },
 
-    // 移除文件
+    // 移除图片
     removeImg(id) {
       const index = this.list
         .findIndex(({ myid }) => (myid === id));
@@ -164,20 +221,7 @@ export default {
       }, 3000);
     },
 
-    // 图片预览
-    openImg(index, url) {
-      if (url) {
-        store.commit('updateMask', true);
-        this.$refs.previewer.show(index);
-      }
-    },
-
-    // 图片预览组件关闭时触发
-    onClose() {
-      store.commit('updateMask', false);
-    },
-
-    // 获取上次上传的作业信息
+    // 获取已上传的作业信息
     getImgData() {
       this.$http.get(`/course/image/${this.paperId}`)
         .then((res) => {
@@ -196,8 +240,8 @@ export default {
         data: this.submitData,
       })
         .then(() => {
-          this.$vux.toast.text('上传成功');
-          this.$router.replace(this.lastUrl);
+          this.$vux.toast.text('课后作业保存成功');
+          this.$router.replace(this.backUrl);
         })
         .catch(this.alertError)
         .then(() => {
@@ -208,13 +252,6 @@ export default {
 
   created() {
     this.getImgData();
-  },
-
-  beforeRouteEnter(to, from, next) {
-    next((vm) => {
-      // eslint-disable-next-line
-      vm.lastUrl = from.path;
-    });
   },
 };
 </script>
@@ -237,6 +274,7 @@ export default {
   }
 
   &__item {
+    cursor: pointer;
     position: relative;
     width: 100%;
     padding-bottom: 100%;
@@ -259,6 +297,7 @@ export default {
       height: 100%;
       object-fit: cover;
       background-color: @background-color;
+      transition: all 0.2s;
     }
 
     & svg {
@@ -270,6 +309,7 @@ export default {
       width: 60%;
       height: 60%;
       fill: @upload-border;
+      transition: all 0.2s;
     }
 
     & label {
@@ -277,6 +317,16 @@ export default {
       width: calc(~"100% - 2px");
       height: calc(~"100% - 2px");
       border:1px dashed @upload-border;
+      transition: all 0.2s;
+    }
+
+    &:active {
+      & svg {
+        fill: @text-color-subsidiary;
+      }
+      & label {
+        border:1px dashed @text-color-subsidiary;
+      }
     }
   }
 
@@ -295,7 +345,8 @@ export default {
   &__preview {
     z-index: 999;
 
-    &__action {
+    &__delete {
+      margin-right: 10px;
       width: 44px;
       height: 44px;
       position: relative;
