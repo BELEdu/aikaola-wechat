@@ -14,7 +14,7 @@
         课程名称：{{classInfo.product_name}}
       </span>
       <span slot="content">
-        剩余课时：{{classInfo.remain_total}}小时
+        剩余课时：{{classInfo.remain_total}}课时
       </span>
 
       <SwiperIndicator
