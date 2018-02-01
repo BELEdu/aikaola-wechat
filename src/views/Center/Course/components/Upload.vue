@@ -31,7 +31,7 @@ export default {
       const files = [...event.target.files];
       files.forEach((file) => {
         // 校验图片格式
-        const isMatch = /image\/(jpg|jpeg)/.test(file.type);
+        const isMatch = /image\/(jpg|png|jpeg)/.test(file.type);
         // 校验图片大小
         const isLimited = file.size < 50 * 1024 * 1024;
 
@@ -94,6 +94,7 @@ export default {
         if (status === 200) {
           this.$emit('update-img', myid, {
             ...resJson,
+            url: `${resJson.url}`,
             preview: null,
             text: '上传成功',
           });
