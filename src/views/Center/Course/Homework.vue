@@ -11,7 +11,7 @@
             <div class="homework__item" @click="openPreviewImg(index,img.url)">
               <!-- 图片 -->
               <img
-                v-img-src="img.url || img.preview"
+                v-img-src="formatImg(img.url,img.preview)"
                 class="my-previewer-img"
               >
               <!-- 提示信息遮罩层 -->
@@ -147,7 +147,7 @@ export default {
     // 转换为preview组件需要的格式
     previewData() {
       return this.submitData.map(img => ({
-        src: img.url,
+        src: `${img.url}?imageMogr2/auto-orient`,
       }));
     },
 
@@ -158,6 +158,21 @@ export default {
   },
 
   methods: {
+    /**
+     * @description 图片格式化
+     * 先判断是否是来源于七牛的图片地址
+     * 根据原图EXIF信息自动旋正
+     * 裁剪正中部分，等比缩小生成100x100缩略图：
+     */
+    formatImg(url, preview) {
+      if (url) {
+        const isQiniuSrc = url.includes('https://oa-statics.caihonggou.com/');
+        if (isQiniuSrc) return `${url}?imageMogr2/auto-orient&imageView2/1/w/100/h/100`;
+        return url;
+      }
+      return preview;
+    },
+
     // 图片预览
     openPreviewImg(index, url) {
       if (url) {
