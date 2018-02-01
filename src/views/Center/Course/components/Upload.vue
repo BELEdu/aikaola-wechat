@@ -4,7 +4,7 @@
       type="file"
       hidden
       multiple
-      accept='image/jpg,image/jpeg'
+      accept='image/*'
       @change="onChange"
     >
   </label>

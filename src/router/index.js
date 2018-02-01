@@ -44,6 +44,14 @@ const router = new Router({
       name: 'Result',
       component: views.Result,
     },
+    {
+      path: '*',
+      name: '404',
+      component: views.NotFound,
+      meta: {
+        title: '404',
+      },
+    },
 
     ...appointment,
 

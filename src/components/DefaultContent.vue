@@ -3,7 +3,9 @@
     <!-- 图标 -->
     <svg><use :xlink:href="`#${svgId}`" /></svg>
     <!-- 提示文案 -->
-    <p v-if="text">{{text}}</p>
+    <p>
+      <slot>{{text}}</slot>
+    </p>
   </div>
 </template>
 
@@ -57,9 +59,9 @@ export default {
   }
 
   p {
-    margin: 25px 0;
+    margin: 18px 0;
     font-size: @text-size-title;
-    line-height: 1;
+    line-height: 1.75;
   }
 }
 </style>

@@ -15,3 +15,5 @@ export { default as ChildBinding } from './ChildBinding';
 export { default as Signup } from './Signup';
 
 export { default as Result } from './Result';
+
+export { default as NotFound } from './NotFound';
