@@ -14,6 +14,9 @@
         v-model="data.mobile"
         title="手机"
         placeholder="请输入手机号"
+        keyboard="number"
+        :min="11"
+        :max="11"
       />
       <VerificationCode
         v-model="data.code"

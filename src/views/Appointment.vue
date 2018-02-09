@@ -17,6 +17,7 @@
         title="手机号码"
         placeholder="请输入手机号码"
         keyboard="number"
+        :min="11"
         :max="11"
         required
       />
@@ -306,7 +307,7 @@ export default {
         message: isSuccess ? `${this.isTypeTest ? MODULE_TEST : MODULE_COURSE}预约成功` : message,
         // to: '/appointment/test',
         // time: 3,
-      }, false);
+      });
     },
 
     // 获年级 & 学科取数据源

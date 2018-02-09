@@ -6,6 +6,7 @@
     title="验证码"
     placeholder="请输入验证码"
     :label-width="labelWidth"
+    keyboard="number"
   >
     <XButton
       class="verification-code__fetch"

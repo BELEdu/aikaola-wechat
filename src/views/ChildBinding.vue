@@ -12,6 +12,7 @@
       <XInput
         v-model="data.identify_code"
         title="识别码"
+        keyboard="number"
         placeholder="请输入识别码"
       />
       <VerificationCode
