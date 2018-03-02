@@ -8,7 +8,7 @@ const devAuthorization = (openid) => {
     document.cookie = `fake_openid=${openid};path=/;`;
   } else {
     // eslint-disable-next-line
-    alert('请配置openid，测试一下git');
+    alert('请配置openid');
   }
 };
 
